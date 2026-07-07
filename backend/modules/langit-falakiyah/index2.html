@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Langit Falakiyah 4D ✦ Al-Hikmah v2.9a Auratik Falak</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+html, body {
+  margin: 0; padding: 0; overflow: hidden;
+  height: 100%;
+  background: radial-gradient(circle at center, #0a1025 0%, #000010 100%);
+  color: #f0e6b2; font-family: 'Cormorant Garamond', serif;
+}
+canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; }
+#intro, #main {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center; color: #f0e6b2;
+  transition: opacity 2s ease-in-out; z-index: 2;
+}
+h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.6em; text-shadow: 0 0 12px #e8c85a, 0 0 22px #b5962b;
+}
+h2 { font-size: 1.05em; color: #f7e9b4; margin-top: 0; text-shadow: 0 0 10px #bfa84e; }
+button {
+  font-family: 'Cormorant Garamond', serif;
+  background: rgba(255,255,255,0.05); border: 1px solid #d8c471;
+  border-radius: 10px; color: #f5e8b8; padding: 8px 16px;
+  margin: 6px; font-size: 1em; backdrop-filter: blur(3px);
+  transition: all 0.3s;
+}
+button:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); box-shadow: 0 0 15px #bfa84e; }
+#audioBtn {
+  position: fixed; top: 15px; right: 15px; background: rgba(255,255,255,0.1);
+  border: 1px solid gold; border-radius: 50%; width: 40px; height: 40px;
+  font-size: 20px; color: gold; cursor: pointer;
+  text-shadow: 0 0 10px gold;
+  display: flex; align-items: center; justify-content: center; z-index: 3;
+}
+footer { position: absolute; bottom: 8px; right: 15px; font-size: 0.75em; color: #d3b96f; font-family: 'Cinzel Decorative', serif; }
+
+#timeInfo {
+  margin-top: 70px; font-size: 1.05em; color: #f5e9c1; text-shadow: 0 0 6px #bfa84e;
+}
+
+.popup {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: rgba(20, 20, 40, 0.95);
+  border: 1px solid gold; border-radius: 15px;
+  padding: 20px; width: 80%; max-width: 350px;
+  color: #f6eec7; text-align: center;
+  font-size: 1em; line-height: 1.6;
+  text-shadow: 0 0 6px gold;
+  opacity: 0; pointer-events: none;
+  transition: all 1s ease;
+  z-index: 5;
+}
+.popup.active {
+  opacity: 1; pointer-events: all; transform: translate(-50%, -50%) scale(1);
+  box-shadow: 0 0 20px gold, 0 0 40px rgba(255,215,0,0.2);
+}
+.popup h3 { margin-top: 0; font-family: 'Cinzel Decorative'; color: #ffd; text-shadow: 0 0 12px gold; }
+.popup small { color: #d9c28a; font-style: italic; }
+
+</style>
+</head>
+<body>
+
+<canvas id="universe"></canvas>
+
+<!-- Halaman Pembuka -->
+<div id="intro">
+  <h1>بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</h1>
+  <p style="max-width:330px;font-size:0.95em;color:#fff7d6;text-shadow:0 0 6px #c7a64f;margin:12px;">
+    “Langit dan waktu adalah rahasia perjalanan ruh di bawah ketetapan-Nya.”
+  </p>
+  <button onclick="startMain()">Masuk ke Langit Falakiyah</button>
+</div>
+
+<!-- Halaman Utama -->
+<div id="main" style="opacity:0;pointer-events:none;">
+  <h1 style="margin-top:-25px;">Perhitungan Falaqiyah Al-Hikmah</h1>
+  <h2>سر الوقت — Rahasia Waktu</h2>
+  <p style="max-width:340px;font-size:0.85em;color:#fff7d6;text-shadow:0 0 6px #c7a64f;">
+    “Hari-hari dalam sepekan berada di bawah kekuasaan planet-planet; tiap hari memiliki tabiat serta pengaruhnya masing-masing.”<br>
+    <small>— Shams al-Ma‘ārif, Bab Sā‘āt al-Kawākib</small>
+  </p>
+
+  <div id="timeInfo">
+    🌞 Penguasa Hari: <span id="hari"></span><br>
+    ⏳ Planet Jam Aktif: <span id="planet"></span><br>
+    🕒 <span id="jam"></span><br>
+    ☀ Pergantian Penguasa Hari: setelah matahari terbit
+  </div>
+
+  <div style="margin-top:10px;">
+    <button onclick="openPopup('amal')">🕯 Sa’at Amal</button>
+    <button onclick="openPopup('mustajab')">🌠 Waktu Mustajab</button>
+    <button onclick="openPopup('doa')">🕊 Do’a & Niat</button>
+    <button onclick="openPopup('info')">📜 Info Falakiyah</button>
+  </div>
+
+  <div class="author" style="margin-top:25px;color:#d3b96f;">Diprakarsai oleh : Endry Arya</div>
+  <footer>© CBA2025</footer>
+</div>
+
+<!-- Popups -->
+<div id="amal" class="popup">
+  <h3>Sa’at Amal</h3>
+  Setiap jam dalam hari memiliki planet penguasa.  
+  Amal yang dilakukan pada saat planetnya sejalan  
+  dengan niat dan unsur ruhani, akan memperoleh kekuatan hikmah.
+</div>
+
+<div id="mustajab" class="popup">
+  <h3>Waktu Mustajab</h3>
+  Waktu paling mustajab adalah saat pergantian cahaya —  
+  antara fajar dan terbenam matahari, serta ketika planet berkuasa  
+  selaras dengan niat amalmu.
+</div>
+
+<div id="doa" class="popup">
+  <h3>Do’a & Niat</h3>
+  Bacalah Do’a Tahsin CBA sebelum memulai wirid atau amal.  
+  Niatkan hanya kepada Allah, dan sertakan tawassul sebagaimana tertuang  
+  dalam Bab Perhitungan Lengkap.
+</div>
+
+<div id="info" class="popup">
+  <h3>Info Falakiyah</h3>
+  Penguasa hari berubah saat matahari terbit.  
+  Setiap hari dan jam memiliki planet falak:  
+  Syams, Qamar, Marikh, Utarid, Musytari, Zuhrah, Zuhal.
+</div>
+
+<div id="audioBtn">🔊</div>
+<audio id="music" autoplay loop>
+  <source src="https://cdn.pixabay.com/download/audio/2023/03/13/audio_272e74d47a.mp3?filename=arabic-background-music-141121.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const music=document.getElementById("music");
+document.getElementById("audioBtn").onclick=()=>{music.paused?music.play():music.pause();};
+
+function startMain(){
+  document.getElementById('intro').style.opacity='0';
+  setTimeout(()=>{
+    document.getElementById('intro').style.display='none';
+    const main=document.getElementById('main');
+    main.style.opacity='1';
+    main.style.pointerEvents='auto';
+    showPlanets=true;
+  },1500);
+}
+
+// popup auratik
+function openPopup(id){
+  const p=document.getElementById(id);
+  if(p.classList.contains("active")) p.classList.remove("active");
+  else p.classList.add("active");
+  p.onclick=(e)=>{if(e.target===p)p.classList.remove("active");};
+}
+
+// waktu falakiyah realtime
+const planetHari=["Syams","Qamar","Marīkh","Utārid","Musytarī","Zuhrah","Zuhal"];
+function getPenguasaHari(){
+  const now=new Date();const sunrise=6;let h=now.getHours();
+  let idx=(now.getDay()+6)%7;if(h>=sunrise)idx=(idx+1)%7;
+  return planetHari[idx];
+}
+const hariElem=document.getElementById('hari');
+const planetElem=document.getElementById('planet');
+const jamElem=document.getElementById('jam');
+const planetOrder=["Qamar","Utārid","Zuhrah","Syams","Marīkh","Musytarī","Zuhal"];
+function updateTime(){
+  const d=new Date();
+  hariElem.textContent=getPenguasaHari();
+  planetElem.textContent=planetOrder[d.getHours()%7];
+  jamElem.textContent=d.toLocaleTimeString('id-ID',{hour12:false});
+}
+setInterval(updateTime,1000);
+
+// animasi bintang auratik
+const canvas=document.getElementById("universe");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;canvas.height=innerHeight;
+function makeStar(){return{x:(Math.random()*2-1)*canvas.width,y:(Math.random()*2-1)*canvas.height,z:Math.random()*canvas.width};}
+const stars=Array(1200).fill().map(makeStar);
+let showPlanets=false,auraPulse=0,starFade=1;
+const planets=[
+  {name:"☉ Syams",r:30,orbit:0,dist:0,color:"#FFD86C",speed:0.000},
+  {name:"☿ Utārid",r:14,orbit:90,dist:140,color:"#A68E74",speed:0.00017},
+  {name:"♀ Zuhrah",r:20,orbit:120,dist:190,color:"#E8B888",speed:0.00014},
+  {name:"☾ Qamar",r:16,orbit:230,dist:250,color:"#CDE3F3",speed:0.00012},
+  {name:"♂ Marīkh",r:25,orbit:310,dist:320,color:"#D67045",speed:0.0001},
+  {name:"♃ Musytarī",r:40,orbit:400,dist:400,color:"#E8CDA2",speed:0.00009},
+  {name:"♄ Zuhal",r:36,orbit:480,dist:470,color:"#C5BA9D",speed:0.00008}
+];
+function drawPlanet(p,cx,cy,t){
+  let x=cx+(p.dist>0?Math.cos(t*p.speed+p.orbit)*p.dist:0);
+  let y=cy+(p.dist>0?Math.sin(t*p.speed+p.orbit)*p.dist:0);
+  let bright=1+(Math.sin(t*0.001+auraPulse)*0.2);
+  let grad=ctx.createRadialGradient(x,y,p.r*0.1,x,y,p.r);
+  grad.addColorStop(0,"#fff");
+  grad.addColorStop(0.3,p.color);
+  grad.addColorStop(1,`rgba(0,0,0,${0.8*bright})`);
+  ctx.beginPath();ctx.fillStyle=grad;ctx.arc(x,y,p.r,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.strokeStyle=`rgba(255,215,130,0.08)`;ctx.arc(cx,cy,p.dist,0,Math.PI*2);ctx.stroke();
+  ctx.font="15px 'Cormorant Garamond'";ctx.fillStyle="gold";ctx.textAlign="center";
+  ctx.fillText(p.name,x,y-p.r-8);
+}
+function animate(t){
+  ctx.fillStyle="rgba(8,12,28,0.9)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  auraPulse+=0.02;
+  stars.forEach(s=>{
+    s.z-=1.5;if(s.z<=0){Object.assign(s,makeStar());s.z=canvas.width;}
+    const k=200/s.z;const px=s.x*k+canvas.width/2;const py=s.y*k+canvas.height/2;
+    if(px>=0&&px<canvas.width&&py>=0&&py<canvas.height){
+      const size=(1-k/5);
+      ctx.fillStyle=`rgba(255,255,230,${0.8*starFade*(0.9+0.1*Math.sin(auraPulse))})`;
+      ctx.fillRect(px,py,size,size);
+    }
+  });
+  const cx=canvas.width/2,cy=canvas.height/2;
+  if(showPlanets)planets.forEach(p=>drawPlanet(p,cx,cy,t));
+  requestAnimationFrame(animate);
+}
+animate(0);
+</script>
+</body>
+</html>

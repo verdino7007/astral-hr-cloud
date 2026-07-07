@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_height="38dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="4dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center|center_vertical|center_horizontal"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="#FF000000"
+            android:textStyle="bold"
+            android:text="JADWAL IMSAKIYAH" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Tahun"
+            android:textStyle="bold" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:hint="1445"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:inputType="number"
+            android:id="@+id/etTahunH"
+            android:text="1445"
+            android:layout_gravity="center_vertical|center_horizontal" />
+
+        <Switch
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:checked="false"
+            android:id="@+id/switchButton"
+            android:text="wis" />
+
+        <Switch
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:checked="false"
+            android:id="@+id/switchHM"
+            android:text="HM" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Tambah Hari" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:hint="0"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:inputType="number"
+            android:id="@+id/etTambah"
+            android:text="0" />
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/btGps"
+            android:text="GPS"
+            android:layout_gravity="center|center_vertical|center_horizontal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Lokasi" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="Al Fithrah"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Ma'had Aly An-Nur II"
+            android:id="@+id/etLokasi" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Lintang Tempat" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:hint="7"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:inputType="numberDecimal"
+            android:id="@+id/etLtd"
+            android:text="7" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:hint="12"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:inputType="numberDecimal"
+            android:id="@+id/etLtm"
+            android:text="30" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:hint="30"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:inputType="numberDecimal"
+            android:id="@+id/etLts"
+            android:text="30" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:id="@+id/etSU"
+            android:text="S"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Bujur Tempat" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:hint="7"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:inputType="number"
+            android:id="@+id/etBtd"
+            android:text="112" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:hint="12"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:inputType="number"
+            android:id="@+id/etBtm"
+            android:text="30" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:hint="30"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:inputType="number"
+            android:id="@+id/etBts"
+            android:text="59" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:id="@+id/etBT"
+            android:text="T"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Tinggi Tempat" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:hint="10"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:inputType="number"
+            android:id="@+id/etTt"
+            android:text="10" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:layout_marginLeft="10dp"
+            android:text="Timezone:" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:hint="7"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:layout_marginLeft="5dp"
+            android:inputType="number"
+            android:id="@+id/etTz"
+            android:text="7" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:textSize="13sp"
+            android:textColor="#FF000000"
+            android:text="Lembaga Falakiyah" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="PP. Al Fithrah"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Ma'had Aly An-Nur II"
+            android:id="@+id/etLf" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Al Hasib" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="Akmal Aqil"
+            android:textColorHint="#FF000000"
+            android:textSize="14sp"
+            android:textColor="#FF000000"
+            android:text="Akmal Aqil"
+            android:id="@+id/etHasib" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/buttonHitung"
+            android:text="Hitung"
+            android:layout_gravity="center|center_vertical|center_horizontal" />
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/btHapus"
+            android:text="Hapus"
+            android:layout_gravity="center|center_vertical|center_horizontal" />
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/btCopy"
+            android:text="Pdf/Share"
+            android:layout_gravity="center|center_vertical|center_horizontal" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:gravity="center|center_vertical|center_horizontal"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:id="@+id/j1"
+                    android:text="JADWAL IMSAKIYAH ROMADLON"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:gravity="center|center_vertical|center_horizontal"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:paddingLeft="5dp"
+                    android:id="@+id/j2"
+                    android:text="1445 H"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:gravity="center|center_vertical|center_horizontal"
+                    android:textSize="14sp"
+                    android:textColor="#FF005B2D"
+                    android:id="@+id/j3"
+                    android:text="Wilayah"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:gravity="center|center_vertical|center_horizontal"
+                    android:textSize="14sp"
+                    android:textColor="#FF005B2D"
+                    android:paddingLeft="5dp"
+                    android:id="@+id/j4"
+                    android:text="Tempat"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:gravity="center|center_vertical|center_horizontal"
+                    android:textSize="14sp"
+                    android:textColor="#FF005B2D"
+                    android:paddingLeft="5dp"
+                    android:id="@+id/j9"
+                    android:text="W.S"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:gravity="center|center_vertical|center_horizontal"
+                    android:textSize="12sp"
+                    android:textColor="#000000"
+                    android:id="@+id/j5"
+                    android:text="Lintang Tempat"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="40dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="NO."
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="100dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="HARI"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="TANGGAL"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="IMSAK"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="SHUBUH"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="TERBIT"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="DHUHUR"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="ASHAR"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="MAGHRIB"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="ISYA"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="Â½ MALAM"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="â…” MALAM"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="40dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:text="NO."
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="40dp"
+                            android:textSize="12sp"
+                            android:textColor="#FF000000"
+                            android:id="@+id/no1"
+                            android:text="No" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="100dp"
+                            android:textSize="12sp"
+                            android:textColor="#FF000000"
+                            android:id="@+id/no2"
+                            android:text="HARI" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#FF000000"
+                            android:id="@+id/no3"
+                            android:text="TANGGAL" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#FFD81993"
+                            android:id="@+id/hasil"
+                            android:text="IMSAK" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:id="@+id/hasil1"
+                            android:text="SHUBUH" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:id="@+id/hasil2"
+                            android:text="TERBIT" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:id="@+id/hasil3"
+                            android:text="DHUHUR" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:id="@+id/hasil4"
+                            android:text="ASHAR" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#FF008645"
+                            android:id="@+id/hasil5"
+                            android:text="MAGHRIB" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:id="@+id/hasil6"
+                            android:text="ISYA" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:id="@+id/hasil7"
+                            android:text="Â½ Malam" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="75dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:id="@+id/hasil10"
+                            android:text="â…” Malam" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="40dp"
+                            android:textSize="12sp"
+                            android:textColor="#000000"
+                            android:id="@+id/hasil8"
+                            android:text="No." />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
