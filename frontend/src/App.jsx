@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { Sparkles, Activity, Database, Users } from 'lucide-react';
+import { Sparkles, Activity, Database, Users, X, Heart } from 'lucide-react';
 import NewAnalysis from './pages/NewAnalysis';
 import CandidateVault from './pages/CandidateVault';
 import TeamMatcher from './pages/TeamMatcher';
 
 function App() {
+  const [showDonate, setShowDonate] = useState(false);
+
   return (
     <BrowserRouter>
       <div className="min-h-screen flex relative font-sans text-slate-100 selection:bg-purple-500/30">
@@ -48,10 +50,10 @@ function App() {
                 <Sparkles className="w-4 h-4 text-slate-600 group-hover:text-cyan-400 transition-colors" />
               </a>
               <div className="h-[1px] bg-white/5 w-full"></div>
-              <a href="https://github.com/verdino7007" target="_blank" rel="noreferrer" className="flex items-center justify-between group">
-                <span className="text-xs font-bold text-slate-400 group-hover:text-fuchsia-400 transition-colors uppercase tracking-widest">Support / Donate</span>
-                <span className="text-lg">💖</span>
-              </a>
+              <button onClick={() => setShowDonate(true)} className="w-full flex items-center justify-between group">
+                <span className="text-xs font-bold text-slate-400 group-hover:text-fuchsia-400 transition-colors uppercase tracking-widest text-left">Support / Donate</span>
+                <span className="text-lg group-hover:scale-110 transition-transform">💖</span>
+              </button>
             </div>
           </div>
         </aside>
@@ -64,6 +66,33 @@ function App() {
             <Route path="/matcher" element={<TeamMatcher />} />
           </Routes>
         </main>
+
+        {/* Donate Modal */}
+        {showDonate && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-slate-900/90 border border-purple-500/30 p-8 rounded-2xl shadow-2xl max-w-sm w-full relative">
+              <button onClick={() => setShowDonate(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+              <div className="text-center space-y-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-green-900/50">
+                  <Heart className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Dukung Kami!</h3>
+                  <p className="text-slate-400 text-sm">Aplikasi ini gratis. Jika Anda merasa terbantu, silakan dukung via GoPay ke nomor berikut:</p>
+                </div>
+                <div className="bg-black/50 border border-green-500/30 p-4 rounded-xl">
+                  <p className="text-green-400 font-mono text-xl tracking-wider font-bold">08121105212</p>
+                  <p className="text-xs text-slate-500 mt-2 uppercase tracking-widest">GoPay</p>
+                </div>
+                <button onClick={() => {navigator.clipboard.writeText('08121105212'); alert('Nomor GoPay disalin!')}} className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 rounded-xl font-bold transition-all shadow-lg shadow-green-900/30">
+                  Salin Nomor
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </BrowserRouter>
   );
