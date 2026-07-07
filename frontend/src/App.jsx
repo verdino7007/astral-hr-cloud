@@ -43,7 +43,7 @@ function App() {
           {/* Footer Navigation */}
           <div className="p-4 border-t border-white/5">
             <div className="bg-black/20 p-4 rounded-2xl border border-white/5 space-y-3">
-              <a href="https://vrrobo2025.com" target="_blank" rel="noreferrer" className="flex items-center justify-between group">
+              <a href="https://vrrobo-lp.vercel.app/#portfolio" target="_blank" rel="noreferrer" className="flex items-center justify-between group">
                 <span className="text-xs font-bold text-slate-400 group-hover:text-cyan-400 transition-colors uppercase tracking-widest">VRROBO2025</span>
                 <Sparkles className="w-4 h-4 text-slate-600 group-hover:text-cyan-400 transition-colors" />
               </a>
