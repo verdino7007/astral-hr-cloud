@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Activity, Users, Target, UserPlus, Sparkles, 
   Briefcase, Hexagon, Compass, Search, 
-  Moon, Sun, BookOpen, Download
+  Moon, Sun, BookOpen, Download, Upload
 } from 'lucide-react';
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer
@@ -20,6 +20,7 @@ function NewAnalysis() {
   
   const [analysisResult, setAnalysisResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [batchProgress, setBatchProgress] = useState(null);
   const [activeTab, setActiveTab] = useState('bazi');
 
   const handleAnalyze = async (e) => {
@@ -43,6 +44,50 @@ function NewAnalysis() {
       console.error("Error analyzing:", error);
       setLoading(false);
     }
+  };
+
+  const handleCSVUpload = (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const text = event.target.result;
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      if(lines.length <= 1) {
+         alert("File CSV kosong atau tidak valid. Format: Nama, YYYY-MM-DD, HH:MM");
+         return;
+      }
+      
+      setLoading(true);
+      setBatchProgress({ current: 0, total: lines.length - 1 });
+      let successCount = 0;
+      
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
+      
+      for (let i = 1; i < lines.length; i++) {
+         const parts = lines[i].split(',');
+         if(parts.length >= 2) {
+             const name = parts[0].trim();
+             const date = parts[1].trim();
+             const time = parts[2] ? parts[2].trim() : '12:00';
+             try {
+                await fetch(`${apiUrl}/analyze`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({name, birth_date: date, birth_time: time}),
+                });
+                successCount++;
+             } catch(err) { console.error(`Error row ${i}:`, err); }
+             
+             setBatchProgress({ current: i, total: lines.length - 1 });
+         }
+      }
+      setLoading(false);
+      setBatchProgress(null);
+      alert(`Batch processing selesai! ${successCount} kandidat berhasil ditambahkan ke Vault.`);
+      e.target.value = null; // reset input
+    };
+    reader.readAsText(file);
   };
 
   const handleDownloadPDF = async () => {
@@ -74,68 +119,90 @@ function NewAnalysis() {
   const itemVariants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } } };
 
   return (
-    <div className="p-8 lg:p-12 xl:p-16 max-w-[2000px] mx-auto">
-      <div className="mb-12">
-        <h2 className="text-4xl md:text-5xl font-bold flex items-center gap-4">
-          <Activity className="w-10 h-10 md:w-12 md:h-12 text-fuchsia-400" /> Profiling Engine
-        </h2>
-        <p className="text-slate-400 mt-4 text-lg max-w-2xl">Enter candidate details to run a multi-layered esoteric analysis and automatically store the insights into the secure vault.</p>
+    <div className="w-full">
+      {/* Page Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="badge badge-purple">
+            <Activity className="w-3.5 h-3.5" /> Engine
+          </div>
+        </div>
+        <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Profiling Engine</h2>
+        <p className="text-zinc-400 mt-2 text-[15px] max-w-xl leading-relaxed">Enter candidate details to run a multi-layered esoteric analysis and store insights into the vault.</p>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-12 xl:gap-16">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         
         {/* Left Form */}
-        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }} className="xl:col-span-4 h-fit">
-          <div className="glass-panel p-10 lg:p-12 rounded-[2rem] shadow-2xl">
-            <form onSubmit={handleAnalyze} className="space-y-8">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="xl:col-span-4 h-fit">
+          <div className="glass-card p-8 rounded-2xl">
+            <div className="flex items-center gap-2 mb-6">
+              <UserPlus className="w-5 h-5 text-purple-400" />
+              <h3 className="text-base font-semibold text-white">Candidate Input</h3>
+            </div>
+            <form onSubmit={handleAnalyze} className="space-y-5">
               <div className="group">
-                <label className="block text-sm font-semibold tracking-[0.15em] text-purple-300/70 uppercase mb-3 ml-2">Candidate Name</label>
-                <div className="relative">
-                  <UserPlus className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-500 group-focus-within:text-purple-400 transition-colors" />
-                  <input type="text" className="w-full pl-14 pr-5 py-4 rounded-2xl glass-input text-xl font-medium tracking-wide" value={candidateData.name} onChange={e => setCandidateData({...candidateData, name: e.target.value})} placeholder="e.g. John Doe" required />
+                <label className="block text-xs font-medium text-zinc-400 mb-2">Full Name</label>
+                <input type="text" className="w-full px-4 py-3 glass-input" value={candidateData.name} onChange={e => setCandidateData({...candidateData, name: e.target.value})} placeholder="e.g. John Doe" required />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="group">
+                  <label className="block text-xs font-medium text-zinc-400 mb-2">Birth Date</label>
+                  <input type="date" className="w-full px-4 py-3 glass-input" value={candidateData.birth_date} onChange={e => setCandidateData({...candidateData, birth_date: e.target.value})} required />
+                </div>
+                <div className="group">
+                  <label className="block text-xs font-medium text-zinc-400 mb-2">Birth Time</label>
+                  <input type="time" className="w-full px-4 py-3 glass-input" value={candidateData.birth_time} onChange={e => setCandidateData({...candidateData, birth_time: e.target.value})} />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="group">
-                  <label className="block text-sm font-semibold tracking-[0.15em] text-purple-300/70 uppercase mb-3 ml-2">Birth Date</label>
-                  <input type="date" className="w-full px-5 py-4 rounded-2xl glass-input text-lg font-medium" value={candidateData.birth_date} onChange={e => setCandidateData({...candidateData, birth_date: e.target.value})} required />
+              <div className="flex flex-col gap-3 pt-2">
+                <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 text-sm font-semibold tracking-wide disabled:opacity-50 disabled:cursor-not-allowed">
+                  <span className="flex items-center justify-center gap-2">
+                    {loading && !batchProgress ? <><Activity className="w-4 h-4 animate-spin" /> Processing...</> : <><Target className="w-4 h-4" /> Generate Report</>}
+                  </span>
+                </button>
+                
+                <div className="relative w-full">
+                  <input type="file" accept=".csv" onChange={handleCSVUpload} disabled={loading} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                  <div className="btn-ghost w-full py-3 text-xs font-semibold flex items-center justify-center gap-2">
+                     <Upload className="w-4 h-4" /> Batch Import (CSV)
+                  </div>
                 </div>
-                <div className="group">
-                  <label className="block text-sm font-semibold tracking-[0.15em] text-purple-300/70 uppercase mb-3 ml-2">Birth Time</label>
-                  <input type="time" className="w-full px-5 py-4 rounded-2xl glass-input text-lg font-medium" value={candidateData.birth_time} onChange={e => setCandidateData({...candidateData, birth_time: e.target.value})} />
-                </div>
+                <p className="text-[11px] text-zinc-500 text-center font-mono">Format: Name, YYYY-MM-DD, HH:MM</p>
               </div>
-
-              <button type="submit" disabled={loading} className="w-full mt-8 group relative px-8 py-5 rounded-2xl bg-gradient-to-r from-purple-600 to-blue-600 font-bold text-white text-lg transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_50px_-10px_rgba(139,92,246,0.7)] disabled:opacity-70 disabled:cursor-not-allowed">
-                <span className="relative flex items-center justify-center gap-3">
-                  {loading ? <><Activity className="w-6 h-6 animate-spin" /> SYNCHRONIZING ENGINES...</> : <><Target className="w-6 h-6" /> GENERATE REPORT</>}
-                </span>
-              </button>
             </form>
           </div>
         </motion.div>
 
         {/* Right Dashboard */}
-        <div className="xl:col-span-8 min-h-[700px] relative">
+        <div className="xl:col-span-8 min-h-[500px] relative">
           <AnimatePresence mode="wait">
             {!analysisResult && !loading ? (
-              <motion.div key="empty" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="absolute inset-0 flex flex-col items-center justify-center glass-panel rounded-3xl p-12 text-center border-dashed border-2 border-white/10 overflow-y-auto">
-                <Compass className="w-16 h-16 text-purple-500/50 mb-6 animate-[spin_20s_linear_infinite]" />
-                <h3 className="text-3xl font-light text-slate-300 mb-4" style={{fontFamily: "'Cinzel', serif"}}>Cyclical Patterns of the Universe</h3>
-                <div className="max-w-2xl space-y-4 text-slate-400 text-lg leading-relaxed">
-                  <p>Ilmu pembacaan karakter (Astrology, BaZi, Primbon, Falakiyah) bukanlah suatu hal yang magis atau gaib. Alam semesta bekerja berdasarkan hukum Tuhan yang bersifat universal dan <strong>siklikal</strong> (memiliki pola yang berulang).</p>
+              <motion.div key="empty" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="h-full flex flex-col items-center justify-center glass-card rounded-2xl p-12 text-center border-dashed border border-white/[0.08]">
+                <Compass className="w-12 h-12 text-purple-500/40 mb-5 animate-[spin_30s_linear_infinite]" />
+                <h3 className="text-2xl font-semibold text-zinc-200 mb-3" style={{fontFamily: "'Cinzel', serif"}}>Cyclical Patterns of the Universe</h3>
+                <div className="max-w-xl space-y-3 text-zinc-400 text-sm leading-relaxed">
+                  <p>Ilmu pembacaan karakter (Astrology, BaZi, Primbon, Falakiyah) bukanlah suatu hal yang magis atau gaib. Alam semesta bekerja berdasarkan hukum Tuhan yang bersifat universal dan <strong className="text-zinc-300">siklikal</strong> (memiliki pola yang berulang).</p>
                   <p>Sejalan dengan temuan dalam jurnal <em>Chronobiology</em> dan <em>Personality and Individual Differences</em>, lingkungan awal dan siklus kosmik terbukti mempengaruhi temperamen dasar manusia secara biologis.</p>
-                  <p>Karena polanya tetap, probabilitas dari suatu karakter dapat dipetakan. Hasil analisis ini tidak memastikan masa depan secara mutlak, melainkan memberikan kerangka probabilitas yang dapat dijadikan bahan pertimbangan strategis oleh HRD.</p>
+                  <p>Karena polanya tetap, probabilitas dari suatu karakter dapat dipetakan. Hasil analisis ini memberikan kerangka probabilitas yang dapat dijadikan bahan pertimbangan strategis oleh HRD.</p>
                 </div>
               </motion.div>
             ) : loading ? (
-               <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="relative w-32 h-32 flex items-center justify-center">
-                  <div className="absolute inset-0 border-4 border-t-purple-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin"></div>
-                  <Sparkles className="w-8 h-8 text-white animate-pulse" />
+               <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-[400px] flex flex-col items-center justify-center">
+                <div className="relative w-20 h-20 flex items-center justify-center">
+                  <div className="absolute inset-0 border-2 border-t-purple-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin"></div>
+                  <Sparkles className="w-6 h-6 text-white animate-pulse" />
                 </div>
-                <p className="mt-8 tracking-widest text-sm text-purple-300 uppercase animate-pulse">Aggregating Esoteric Databanks...</p>
+                {batchProgress ? (
+                   <>
+                     <p className="mt-8 tracking-widest text-sm text-purple-300 uppercase animate-pulse">Batch Processing CSV...</p>
+                     <p className="mt-2 text-2xl font-bold text-white">{batchProgress.current} / {batchProgress.total}</p>
+                   </>
+                ) : (
+                   <p className="mt-8 tracking-widest text-sm text-purple-300 uppercase animate-pulse">Aggregating Esoteric Databanks...</p>
+                )}
               </motion.div>
             ) : (
               <motion.div key="results" id="report-content" variants={containerVariants} initial="hidden" animate="show" className="h-full flex flex-col gap-6">
@@ -248,69 +315,66 @@ function NewAnalysis() {
                       )}
 
                       {activeTab === 'falakiyah' && (
-                        <motion.div key="tab-falakiyah" initial={{opacity: 0, y: 10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}} className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
-                           <div className="space-y-6">
-                             <h4 className="text-sm tracking-[0.2em] text-amber-300 uppercase flex items-center gap-2"><Sun className="w-5 h-5"/> Spiritual Astronomy</h4>
-                             
-                             <div className="grid grid-cols-2 gap-4">
-                               <div className="bg-black/20 p-5 rounded-2xl border border-white/5">
-                                 <p className="text-xs text-slate-400 uppercase mb-1">Sun Sign</p>
-                                 <p className="text-2xl font-bold text-amber-400">{analysisResult.results.falakiyah.sun_sign}</p>
-                               </div>
-                               <div className="bg-black/20 p-5 rounded-2xl border border-white/5">
-                                 <p className="text-xs text-slate-400 uppercase mb-1">Moon Sign</p>
-                                 <p className="text-2xl font-bold text-slate-300">{analysisResult.results.falakiyah.moon_sign}</p>
-                               </div>
-                             </div>
-                             
-                             <div className="glass-card p-6 rounded-2xl mt-4">
-                               <h4 className="text-sm tracking-[0.2em] text-fuchsia-400 uppercase mb-2">HR Insight</h4>
-                               <p className="text-lg text-slate-200">{analysisResult.results.falakiyah.hr_insight}</p>
-                             </div>
-                             
-                             <div className="pt-2">
-                               <h4 className="text-sm tracking-[0.2em] text-blue-400 uppercase mb-4 flex items-center gap-2"><Moon className="w-4 h-4"/> Planetary Positions</h4>
-                               <div className="space-y-3">
-                                 {Object.entries(analysisResult.results.falakiyah.planetary_positions).map(([planet, constellation]) => (
-                                   <div key={planet} className="flex justify-between items-center p-3 border-b border-white/10">
-                                     <span className="font-bold text-slate-300">{planet}</span>
-                                     <span className="text-fuchsia-300">{constellation}</span>
-                                   </div>
-                                 ))}
-                               </div>
-                             </div>
-                           </div>
-                           
-                           <div>
-                             <h4 className="text-sm tracking-[0.2em] text-emerald-400 uppercase mb-4 flex items-center gap-2">
-                               <BookOpen className="w-5 h-5"/> Hisab Jummal (Name Numerology)
-                             </h4>
-                             <div className="glass-card p-6 rounded-2xl bg-gradient-to-br from-emerald-900/20 to-teal-900/20 border-emerald-500/20">
-                               <div className="flex justify-between items-start mb-6">
-                                 <div>
-                                   <p className="text-xs text-emerald-400 uppercase tracking-widest mb-1">Dominant Element</p>
-                                   <h3 className="text-3xl font-bold text-white flex items-center gap-3">
-                                     {analysisResult.results.falakiyah.numerology?.icon} {analysisResult.results.falakiyah.numerology?.element}
-                                   </h3>
-                                 </div>
-                                 <div className="text-right">
-                                   <p className="text-xs text-slate-400 uppercase tracking-widest mb-1">Abjad Weight</p>
-                                   <p className="text-2xl font-bold text-emerald-300">{analysisResult.results.falakiyah.numerology?.weight}</p>
-                                 </div>
-                               </div>
-                               
-                               <div className="space-y-4">
-                                 <div>
-                                   <p className="text-xs text-slate-400 uppercase mb-1">Suitable Job Roles</p>
-                                   <p className="text-slate-200 bg-black/40 p-3 rounded-lg">{analysisResult.results.falakiyah.numerology?.suitable_jobs}</p>
-                                 </div>
-                                 <div>
-                                   <p className="text-xs text-slate-400 uppercase mb-1">Team Compatibility</p>
-                                   <p className="text-slate-200 bg-black/40 p-3 rounded-lg">{analysisResult.results.falakiyah.numerology?.team_compatibility}</p>
-                                 </div>
-                               </div>
-                             </div>
-                           </div>
+                        <motion.div key="tab-falakiyah" initial={{opacity: 0, y: 10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}} className="h-full flex flex-col gap-8 w-full">
+                          
+                          {/* Top Info Cards */}
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="glass-panel p-8 rounded-[2rem] bg-gradient-to-br from-fuchsia-900/20 to-purple-900/10 border-fuchsia-500/20 shadow-lg">
+                              <h4 className="text-sm font-bold tracking-[0.2em] text-fuchsia-400 uppercase mb-6 flex items-center gap-3"><Sun className="w-5 h-5"/> Hisab Jummal Numerology</h4>
+                              
+                              <div className="mb-6 bg-black/40 p-5 rounded-2xl font-mono text-sm text-slate-300 break-words leading-relaxed shadow-inner border border-white/5">
+                                {analysisResult.results.falakiyah.numerology?.calculation}
+                              </div>
+                              <div className="flex justify-between items-center bg-fuchsia-900/30 p-5 rounded-2xl border border-fuchsia-500/30">
+                                <span className="text-sm font-bold text-fuchsia-300">Reduction Rule:</span>
+                                <span className="font-bold text-white font-mono">{analysisResult.results.falakiyah.numerology?.modulo_rule}</span>
+                              </div>
+                              <div className="mt-6 flex items-center gap-5">
+                                <span className="text-5xl drop-shadow-lg">{analysisResult.results.falakiyah.numerology?.icon}</span>
+                                <div>
+                                  <p className="font-bold text-white text-2xl">{analysisResult.results.falakiyah.numerology?.element}</p>
+                                  <p className="text-xs text-slate-400 uppercase tracking-[0.2em] mt-1 font-semibold">Core Ruling Energy</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="glass-panel p-8 rounded-[2rem] bg-gradient-to-br from-emerald-900/20 to-teal-900/10 border-emerald-500/20 flex flex-col justify-between shadow-lg">
+                              <div>
+                                <h4 className="text-sm font-bold tracking-[0.2em] text-emerald-400 uppercase mb-6 flex items-center gap-3"><Sparkles className="w-5 h-5"/> Spiritual Patch (Dhikr)</h4>
+                                <p className="text-base text-slate-300 mb-6 leading-loose">
+                                  Based on the candidate's core planetary energy, the following <strong className="text-emerald-300">Asma Allah</strong> are recommended to balance and maximize their potential:
+                                </p>
+                              </div>
+                              <div className="bg-emerald-900/30 p-8 rounded-2xl border border-emerald-500/30 text-center shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]">
+                                <p className="text-2xl md:text-3xl font-black text-emerald-300 drop-shadow-md">
+                                  {analysisResult.results.falakiyah.numerology?.asmaul_husna}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* HR Insight */}
+                          <div className="bg-gradient-to-r from-black/40 to-black/20 p-8 rounded-[2rem] border border-white/5 shadow-inner">
+                            <h4 className="text-sm font-bold tracking-[0.2em] text-slate-400 uppercase mb-4">Astronomical HR Insight</h4>
+                            <p className="text-slate-200 text-xl leading-relaxed">{analysisResult.results.falakiyah.hr_insight}</p>
+                          </div>
+                          
+                          {/* Planetary Positions List */}
+                          <div>
+                            <h4 className="text-sm font-bold tracking-[0.2em] text-purple-400 uppercase mb-6 flex items-center gap-3"><Activity className="w-5 h-5"/> Planetary Impacts on Work Behavior</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              {analysisResult.results.falakiyah.planetary_positions?.map((p, i) => (
+                                <div key={i} className="flex flex-col gap-3 p-6 bg-purple-900/10 rounded-2xl border border-purple-500/10 hover:border-purple-500/30 transition-all hover:bg-purple-900/20">
+                                  <div className="flex justify-between items-center border-b border-purple-500/20 pb-3">
+                                    <span className="text-lg text-slate-300 font-black">{p.name}</span>
+                                    <span className="text-base text-fuchsia-300 font-bold px-3 py-1 bg-fuchsia-500/10 rounded-lg">{p.constellation}</span>
+                                  </div>
+                                  <p className="text-base text-slate-300 leading-relaxed mt-1 font-medium">{p.implication}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
                         </motion.div>
                       )}
                     </AnimatePresence>
