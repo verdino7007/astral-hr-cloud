@@ -4,9 +4,20 @@ import { ShieldAlert, Terminal, Eye, Sparkles, X, Heart, ExternalLink, ChevronRi
 import NewAnalysis from './pages/NewAnalysis';
 import CandidateVault from './pages/CandidateVault';
 import TeamMatcher from './pages/TeamMatcher';
+import { playKeySound, playReturnSound } from './utils/typewriterSound';
 
 function AppContent() {
   const [showDonate, setShowDonate] = useState(false);
+
+  const handleOpenDonate = () => {
+    playReturnSound();
+    setShowDonate(true);
+  };
+
+  const handleCloseDonate = () => {
+    playReturnSound();
+    setShowDonate(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col text-cia-dark relative font-typewriter">
@@ -25,7 +36,7 @@ function AppContent() {
           <div className="h-24 flex flex-col md:flex-row items-center justify-between py-4 md:py-0 gap-4">
             
             {/* Logo (Dossier Stamp style) */}
-            <NavLink to="/" className="flex items-center gap-3 shrink-0">
+            <NavLink to="/" onClick={playReturnSound} className="flex items-center gap-3 shrink-0">
               <div className="border-3 border-cia-dark px-3 py-1.5 font-stamp text-xl font-black rotate-[-2deg] bg-cia-card stamp stamp-secret tracking-tighter">
                 CIA-HR
               </div>
@@ -39,38 +50,31 @@ function AppContent() {
 
             {/* Navigation (Index card style tabs) */}
             <nav className="flex items-center gap-1.5 p-1 bg-cia-dark/5 border-2 border-cia-dark rounded">
-              <NavLink to="/" end className={({ isActive }) =>
+              <NavLink to="/" onClick={playReturnSound} end className={({ isActive }) =>
                 `flex items-center gap-2 px-4 py-2 text-xs font-bold tracking-wide transition-all border ${isActive ? 'bg-cia-dark text-cia-bg border-cia-dark shadow-none' : 'bg-cia-card text-cia-dark border-transparent hover:border-cia-dark'}`
               }>
                 <Terminal className="w-4 h-4" />
                 <span>New Dossier</span>
               </NavLink>
 
-              <NavLink to="/vault" className={({ isActive }) =>
+              <NavLink to="/vault" onClick={playReturnSound} className={({ isActive }) =>
                 `flex items-center gap-2 px-4 py-2 text-xs font-bold tracking-wide transition-all border ${isActive ? 'bg-cia-dark text-cia-bg border-cia-dark shadow-none' : 'bg-cia-card text-cia-dark border-transparent hover:border-cia-dark'}`
               }>
                 <Terminal className="w-4 h-4" />
                 <span>Candidate Vault</span>
               </NavLink>
 
-              <NavLink to="/matcher" className={({ isActive }) =>
+              <NavLink to="/matcher" onClick={playReturnSound} className={({ isActive }) =>
                 `flex items-center gap-2 px-4 py-2 text-xs font-bold tracking-wide transition-all border ${isActive ? 'bg-cia-dark text-cia-bg border-cia-dark shadow-none' : 'bg-cia-card text-cia-dark border-transparent hover:border-cia-dark'}`
               }>
                 <Terminal className="w-4 h-4" />
                 <span>Team Matcher</span>
               </NavLink>
             </nav>
+            
+            {/* Empty block to balance layout on desktop */}
+            <div className="hidden md:block w-[140px]"></div>
 
-            {/* Support Actions */}
-            <div className="flex items-center gap-4 shrink-0">
-              <button
-                onClick={() => setShowDonate(true)}
-                className="px-4 py-2.5 btn-secondary text-xs font-bold flex items-center gap-2"
-              >
-                <Heart className="w-3.5 h-3.5 fill-current" />
-                Support / Donate
-              </button>
-            </div>
           </div>
         </div>
       </header>
@@ -105,6 +109,7 @@ function AppContent() {
               href="https://vrrobo-lp.vercel.app/#portfolio"
               target="_blank"
               rel="noreferrer"
+              onClick={playReturnSound}
               className="flex items-center gap-2 text-xs font-bold tracking-wider text-cia-muted hover:text-cia-dark transition-colors"
             >
               VRROBO2025
@@ -112,7 +117,7 @@ function AppContent() {
             </a>
             <div className="w-px h-4 bg-cia-dark/30"></div>
             <button
-              onClick={() => setShowDonate(true)}
+              onClick={handleOpenDonate}
               className="flex items-center gap-2 text-xs font-bold tracking-wider text-cia-muted hover:text-cia-dark transition-colors"
             >
               GoPay Donate
@@ -123,7 +128,7 @@ function AppContent() {
 
       {/* Classified Donate Modal */}
       {showDonate && (
-        <div className="fixed inset-0 bg-cia-dark/45 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={() => setShowDonate(false)}>
+        <div className="fixed inset-0 bg-cia-dark/45 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={handleCloseDonate}>
           <div className="w-full max-w-md bg-cia-card border-[3px] border-cia-dark shadow-cia-card relative overflow-hidden" onClick={e => e.stopPropagation()}>
             {/* Top warning line */}
             <div className="bg-cia-red text-white text-center py-2 text-[10px] font-bold tracking-[0.2em] uppercase">
@@ -131,7 +136,7 @@ function AppContent() {
             </div>
             
             <div className="p-8">
-              <button onClick={() => setShowDonate(false)} className="absolute top-12 right-6 text-cia-muted hover:text-cia-dark transition-colors p-1.5 border border-transparent hover:border-cia-dark">
+              <button onClick={handleCloseDonate} className="absolute top-12 right-6 text-cia-muted hover:text-cia-dark transition-colors p-1.5 border border-transparent hover:border-cia-dark">
                 <X className="w-4 h-4" />
               </button>
               
@@ -142,21 +147,20 @@ function AppContent() {
                 
                 <div>
                   <h3 className="text-lg font-black text-cia-dark">SUPPORT MISSION FUND</h3>
-                  <p className="text-cia-muted text-xs mt-2 max-w-xs mx-auto leading-relaxed font-semibold">
+                  <p className="text-cia-muted text-xs mt-2 max-w-xs mx-auto leading-relaxed font-semibold uppercase">
                     Operasional sistem ini dibiayai mandiri. Salurkan dana bantuan operasional via nomor di bawah.
                   </p>
                 </div>
                 
                 <div className="bg-cia-bg border-2 border-cia-dark p-6 relative">
                   <div className="absolute -top-3 left-4 px-2 bg-cia-card text-[9px] font-black uppercase text-cia-red">GoPay Account</div>
-                  {/* Click to reveal or copy GoPay */}
                   <p className="text-cia-red font-bold text-2xl tracking-widest font-mono">08121105212</p>
                   <p className="text-[9px] text-cia-muted mt-2 font-bold uppercase tracking-widest">Click below to copy target details</p>
                 </div>
                 
                 <button 
-                  onClick={() => { navigator.clipboard.writeText('08121105212'); alert('GoPay details copied successfully.'); }} 
-                  className="w-full py-3.5 btn-primary font-black text-xs"
+                  onClick={() => { playReturnSound(); navigator.clipboard.writeText('08121105212'); alert('GoPay details copied successfully.'); }} 
+                  className="w-full py-3.5 btn-primary font-bold text-xs"
                 >
                   COPY DOSSIER NUMBER
                 </button>

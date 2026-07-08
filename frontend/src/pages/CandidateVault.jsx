@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Database, Trash2, Edit2, Loader, Save, X, ShieldAlert } from 'lucide-react';
+import { Database, Trash2, Edit2, Loader, Save, X } from 'lucide-react';
+import { playKeySound, playReturnSound } from '../utils/typewriterSound';
 
 function CandidateVault() {
   const [candidates, setCandidates] = useState([]);
@@ -26,6 +27,7 @@ function CandidateVault() {
   }, []);
 
   const handleDelete = async (id) => {
+    playReturnSound();
     if (!confirm('Apakah Anda yakin ingin menghapus arsip file kandidat ini?')) return;
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
@@ -37,11 +39,13 @@ function CandidateVault() {
   };
 
   const startEdit = (c) => {
+    playReturnSound();
     setEditingId(c.id);
     setEditForm({ name: c.name, birth_date: c.birth_date, birth_time: c.birth_time });
   };
 
   const handleSaveEdit = async () => {
+    playReturnSound();
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
       const res = await fetch(`${apiUrl}/candidates/${editingId}`, {
@@ -123,6 +127,7 @@ function CandidateVault() {
                             className="w-full glass-input text-xs"
                             value={editForm.name}
                             onChange={e => setEditForm({...editForm, name: e.target.value})}
+                            onKeyDown={playKeySound}
                           />
                         ) : c.name}
                       </td>
@@ -135,6 +140,7 @@ function CandidateVault() {
                             className="w-full glass-input text-xs"
                             value={editForm.birth_date}
                             onChange={e => setEditForm({...editForm, birth_date: e.target.value})}
+                            onKeyDown={playKeySound}
                           />
                         ) : c.birth_date}
                       </td>
@@ -147,6 +153,7 @@ function CandidateVault() {
                             className="w-full glass-input text-xs"
                             value={editForm.birth_time}
                             onChange={e => setEditForm({...editForm, birth_time: e.target.value})}
+                            onKeyDown={playKeySound}
                           />
                         ) : c.birth_time}
                       </td>
@@ -170,7 +177,7 @@ function CandidateVault() {
                               <Save className="w-3.5 h-3.5" />
                             </button>
                             <button
-                              onClick={() => setEditingId(null)}
+                              onClick={() => { playReturnSound(); setEditingId(null); }}
                               className="p-2 border border-cia-dark bg-cia-card text-cia-dark transition-colors"
                               title="Discard"
                             >

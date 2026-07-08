@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Loader, Target, ShieldAlert, Shield } from 'lucide-react';
+import { playKeySound, playReturnSound, playBellSound } from '../utils/typewriterSound';
 
 function TeamMatcher() {
   const [candidates, setCandidates] = useState([]);
@@ -24,6 +25,7 @@ function TeamMatcher() {
   }, []);
 
   const toggleSelect = (id) => {
+    playReturnSound();
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(i => i !== id));
     } else {
@@ -33,6 +35,7 @@ function TeamMatcher() {
 
   const handleCalculate = async () => {
     if (selectedIds.length < 2) return;
+    playReturnSound();
     setCalculating(true);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
@@ -45,10 +48,12 @@ function TeamMatcher() {
       setTimeout(() => {
         setSynergyResult(data);
         setCalculating(false);
+        playBellSound();
       }, 1000);
     } catch (err) {
       console.error(err);
       setCalculating(false);
+      playBellSound();
     }
   };
 
@@ -101,6 +106,7 @@ function TeamMatcher() {
                     className="flex-1 px-3 py-2 border-2 border-cia-dark bg-cia-bg text-xs font-bold appearance-none cursor-pointer"
                     id="candidate-select"
                     defaultValue=""
+                    onChange={playReturnSound}
                   >
                     <option value="" disabled className="uppercase">-- CHOOSE SUBJECT FILE --</option>
                     {candidates.filter(c => !selectedIds.includes(c.id)).map(c => (

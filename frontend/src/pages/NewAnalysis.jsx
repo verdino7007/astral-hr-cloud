@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { playKeySound, playBellSound, playReturnSound } from '../utils/typewriterSound';
 
 function NewAnalysis() {
   const [step, setStep] = useState('welcome'); // welcome, input, results
@@ -30,6 +31,7 @@ function NewAnalysis() {
     e.preventDefault();
     if(!candidateData.name || !candidateData.birth_date) return;
 
+    playReturnSound();
     setLoading(true);
     setStep('results');
     try {
@@ -43,16 +45,19 @@ function NewAnalysis() {
       setTimeout(() => {
         setAnalysisResult(data);
         setLoading(false);
+        playBellSound();
       }, 1500);
     } catch (error) {
       console.error("Error analyzing:", error);
       setLoading(false);
+      playBellSound();
     }
   };
 
   const handleCSVUpload = (e) => {
     const file = e.target.files[0];
     if(!file) return;
+    playReturnSound();
     const reader = new FileReader();
     reader.onload = async (event) => {
       const text = event.target.result;
@@ -89,6 +94,7 @@ function NewAnalysis() {
       }
       setLoading(false);
       setBatchProgress(null);
+      playBellSound();
       alert(`Batch processing selesai! ${successCount} kandidat berhasil ditambahkan ke Vault.`);
       e.target.value = null;
       setStep('welcome'); // Go back to start
@@ -97,6 +103,7 @@ function NewAnalysis() {
   };
 
   const handleDownloadPDF = async () => {
+    playReturnSound();
     const reportElement = document.getElementById('report-content');
     if (!reportElement) return;
 
@@ -155,7 +162,7 @@ function NewAnalysis() {
             </div>
 
             <button
-              onClick={() => setStep('input')}
+              onClick={() => { playReturnSound(); setStep('input'); }}
               className="px-8 py-4 btn-primary font-bold text-sm flex items-center gap-3 transition-transform"
             >
               INITIATE NEW PROFILE FILE <ArrowRight className="w-4 h-4" />
@@ -179,7 +186,7 @@ function NewAnalysis() {
           >
             {/* Back to welcome */}
             <button
-              onClick={() => setStep('welcome')}
+              onClick={() => { playReturnSound(); setStep('welcome'); }}
               className="inline-flex items-center gap-2 text-xs font-bold text-cia-muted hover:text-cia-dark mb-6 transition-colors uppercase"
             >
               <ArrowLeft className="w-4 h-4" /> [ CANCEL DOSSIER CREATION ]
@@ -201,13 +208,13 @@ function NewAnalysis() {
                 {/* Method switcher */}
                 <div className="flex border border-cia-dark bg-cia-bg p-0.5 rounded">
                   <button
-                    onClick={() => setInputType('manual')}
+                    onClick={() => { playReturnSound(); setInputType('manual'); }}
                     className={`px-3 py-1.5 text-xs font-bold transition-all ${inputType === 'manual' ? 'bg-cia-dark text-cia-bg' : 'text-cia-dark hover:bg-cia-dark/10'}`}
                   >
                     MANUAL
                   </button>
                   <button
-                    onClick={() => setInputType('csv')}
+                    onClick={() => { playReturnSound(); setInputType('csv'); }}
                     className={`px-3 py-1.5 text-xs font-bold transition-all ${inputType === 'csv' ? 'bg-cia-dark text-cia-bg' : 'text-cia-dark hover:bg-cia-dark/10'}`}
                   >
                     CSV IMPORT
@@ -227,6 +234,7 @@ function NewAnalysis() {
                       className="w-full glass-input"
                       value={candidateData.name}
                       onChange={e => setCandidateData({...candidateData, name: e.target.value})}
+                      onKeyDown={playKeySound}
                       placeholder="ENTER FULL NAME"
                       required
                     />
@@ -242,6 +250,7 @@ function NewAnalysis() {
                         className="w-full glass-input"
                         value={candidateData.birth_date}
                         onChange={e => setCandidateData({...candidateData, birth_date: e.target.value})}
+                        onKeyDown={playKeySound}
                         required
                       />
                     </div>
@@ -254,6 +263,7 @@ function NewAnalysis() {
                         className="w-full glass-input"
                         value={candidateData.birth_time}
                         onChange={e => setCandidateData({...candidateData, birth_time: e.target.value})}
+                        onKeyDown={playKeySound}
                       />
                     </div>
                   </div>
@@ -331,6 +341,7 @@ function NewAnalysis() {
                 <div className="flex justify-between items-center relative z-20">
                   <button
                     onClick={() => {
+                      playReturnSound();
                       setAnalysisResult(null);
                       setStep('input');
                     }}
@@ -341,7 +352,7 @@ function NewAnalysis() {
 
                   <div className="flex gap-4">
                     <button
-                      onClick={() => setRevealSecrets(!revealSecrets)}
+                      onClick={() => { playReturnSound(); setRevealSecrets(!revealSecrets); }}
                       className="px-4 py-2 bg-cia-card border-2 border-cia-dark text-xs font-bold flex items-center gap-2 hover:bg-cia-dark hover:text-cia-bg transition-all"
                     >
                       {revealSecrets ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -396,9 +407,9 @@ function NewAnalysis() {
                           <Download className="w-3.5 h-3.5" /> PRINT DOSSIER
                         </button>
                         <div className="flex border-2 border-cia-dark bg-cia-bg p-0.5 rounded">
-                          <button onClick={() => setActiveTab('bazi')} className={`px-3 py-1.5 text-xs font-bold transition-all ${activeTab === 'bazi' ? 'bg-cia-dark text-cia-bg' : 'text-cia-dark hover:bg-cia-dark/10'}`}>BAZI</button>
-                          <button onClick={() => setActiveTab('primbon')} className={`px-3 py-1.5 text-xs font-bold transition-all ${activeTab === 'primbon' ? 'bg-cia-dark text-cia-bg' : 'text-cia-dark hover:bg-cia-dark/10'}`}>WETON</button>
-                          <button onClick={() => setActiveTab('falakiyah')} className={`px-3 py-1.5 text-xs font-bold transition-all ${activeTab === 'falakiyah' ? 'bg-cia-dark text-cia-bg' : 'text-cia-dark hover:bg-cia-dark/10'}`}>FALAKIYAH</button>
+                          <button onClick={() => { playReturnSound(); setActiveTab('bazi'); }} className={`px-3 py-1.5 text-xs font-bold transition-all ${activeTab === 'bazi' ? 'bg-cia-dark text-cia-bg' : 'text-cia-dark hover:bg-cia-dark/10'}`}>BAZI</button>
+                          <button onClick={() => { playReturnSound(); setActiveTab('primbon'); }} className={`px-3 py-1.5 text-xs font-bold transition-all ${activeTab === 'primbon' ? 'bg-cia-dark text-cia-bg' : 'text-cia-dark hover:bg-cia-dark/10'}`}>WETON</button>
+                          <button onClick={() => { playReturnSound(); setActiveTab('falakiyah'); }} className={`px-3 py-1.5 text-xs font-bold transition-all ${activeTab === 'falakiyah' ? 'bg-cia-dark text-cia-bg' : 'text-cia-dark hover:bg-cia-dark/10'}`}>FALAKIYAH</button>
                         </div>
                       </div>
                     </div>
@@ -419,7 +430,7 @@ function NewAnalysis() {
                           const formattedHtml = paragraph
                             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                             .replace(/(lemah|sensitif|konflik|kurang|buruk|bahaya|cacat|negatif|kelemahan)/gi, (match) => {
-                              return revealSecrets ? `<span className="border-b border-cia-red text-cia-red">${match}</span>` : `<span class="redacted">${match}</span>`;
+                              return revealSecrets ? `<span class="border-b border-cia-red text-cia-red">${match}</span>` : `<span class="redacted">${match}</span>`;
                             });
                           return <p key={idx} dangerouslySetInnerHTML={{ __html: formattedHtml }} />;
                         })}
@@ -440,7 +451,7 @@ function NewAnalysis() {
 
                         {/* BaZi Tab */}
                         {activeTab === 'bazi' && (
-                          <motion.div key="tab-bazi" initial={{opacity: 0, y: 5}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-5}} className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                          <motion.div key="tab-bazi" initial={{opacity: 0, y: 5}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-5}} className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                             <div className="space-y-8">
                               <div className="card p-6 bg-cia-card border-2 border-cia-dark shadow-cia-card slant-left slant-hover relative">
                                 <div className="absolute -top-3 right-4 px-2 py-0.5 border border-cia-dark bg-cia-bg text-[8px] font-bold uppercase tracking-wider">traits</div>
