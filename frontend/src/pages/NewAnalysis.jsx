@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Activity, Users, Target, UserPlus, Sparkles, 
-  Briefcase, Hexagon, Compass, Search, 
+import {
+  Activity, Users, Target, UserPlus, Sparkles,
+  Briefcase, Hexagon, Compass, Search,
   Moon, Sun, BookOpen, Download, Upload
 } from 'lucide-react';
 import {
@@ -17,7 +17,7 @@ function NewAnalysis() {
     birth_date: '',
     birth_time: '12:00',
   });
-  
+
   const [analysisResult, setAnalysisResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [batchProgress, setBatchProgress] = useState(null);
@@ -26,7 +26,7 @@ function NewAnalysis() {
   const handleAnalyze = async (e) => {
     e.preventDefault();
     if(!candidateData.name || !candidateData.birth_date) return;
-    
+
     setLoading(true);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
@@ -57,13 +57,13 @@ function NewAnalysis() {
          alert("File CSV kosong atau tidak valid. Format: Nama, YYYY-MM-DD, HH:MM");
          return;
       }
-      
+
       setLoading(true);
       setBatchProgress({ current: 0, total: lines.length - 1 });
       let successCount = 0;
-      
+
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
-      
+
       for (let i = 1; i < lines.length; i++) {
          const parts = lines[i].split(',');
          if(parts.length >= 2) {
@@ -78,14 +78,14 @@ function NewAnalysis() {
                 });
                 successCount++;
              } catch(err) { console.error(`Error row ${i}:`, err); }
-             
+
              setBatchProgress({ current: i, total: lines.length - 1 });
          }
       }
       setLoading(false);
       setBatchProgress(null);
       alert(`Batch processing selesai! ${successCount} kandidat berhasil ditambahkan ke Vault.`);
-      e.target.value = null; // reset input
+      e.target.value = null;
     };
     reader.readAsText(file);
   };
@@ -93,14 +93,14 @@ function NewAnalysis() {
   const handleDownloadPDF = async () => {
     const reportElement = document.getElementById('report-content');
     if (!reportElement) return;
-    
+
     try {
       const canvas = await html2canvas(reportElement, { scale: 2, useCORS: true, backgroundColor: '#0f172a' });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
+
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`AstralHR_${analysisResult.name}.pdf`);
     } catch (err) {
@@ -120,175 +120,288 @@ function NewAnalysis() {
 
   return (
     <div className="w-full">
-      {/* Page Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="badge badge-purple">
-            <Activity className="w-3.5 h-3.5" /> Engine
-          </div>
+
+      {/* ── Page Header ── */}
+      <div className="mb-14">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-[12px] font-semibold tracking-wide mb-6">
+          <Activity className="w-3.5 h-3.5" />
+          PROFILING ENGINE
         </div>
-        <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Profiling Engine</h2>
-        <p className="text-zinc-400 mt-2 text-[15px] max-w-xl leading-relaxed">Enter candidate details to run a multi-layered esoteric analysis and store insights into the vault.</p>
+        <h1 className="text-4xl lg:text-5xl font-bold text-white tracking-tight leading-[1.15]">
+          Candidate Analysis
+        </h1>
+        <p className="text-zinc-400 mt-5 text-[16px] leading-[1.8] max-w-2xl">
+          Enter candidate details to generate a comprehensive multi-engine esoteric profile.
+          All results are automatically stored in the Candidate Vault.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-        
-        {/* Left Form */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="xl:col-span-4 h-fit">
-          <div className="glass-card p-8 rounded-2xl">
-            <div className="flex items-center gap-2 mb-6">
-              <UserPlus className="w-5 h-5 text-purple-400" />
-              <h3 className="text-base font-semibold text-white">Candidate Input</h3>
+      {/* ── Main Grid ── */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 xl:gap-14">
+
+        {/* ════ LEFT: INPUT FORM ════ */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="xl:col-span-4 h-fit"
+        >
+          <div className="card p-9 lg:p-10">
+            {/* Card Header */}
+            <div className="flex items-center gap-3 mb-8 pb-6 border-b border-white/[0.05]">
+              <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                <UserPlus className="w-5 h-5 text-purple-400" />
+              </div>
+              <div>
+                <h3 className="text-[16px] font-semibold text-white">Candidate Input</h3>
+                <p className="text-[12px] text-zinc-500 mt-0.5">Fill in birth details below</p>
+              </div>
             </div>
-            <form onSubmit={handleAnalyze} className="space-y-5">
-              <div className="group">
-                <label className="block text-xs font-medium text-zinc-400 mb-2">Full Name</label>
-                <input type="text" className="w-full px-4 py-3 glass-input" value={candidateData.name} onChange={e => setCandidateData({...candidateData, name: e.target.value})} placeholder="e.g. John Doe" required />
+
+            <form onSubmit={handleAnalyze} className="space-y-7">
+              {/* Name */}
+              <div>
+                <label className="block text-[13px] font-medium text-zinc-300 mb-3">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  className="w-full px-5 py-4 glass-input text-[16px]"
+                  value={candidateData.name}
+                  onChange={e => setCandidateData({...candidateData, name: e.target.value})}
+                  placeholder="e.g. Ahmad Fauzi"
+                  required
+                />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="group">
-                  <label className="block text-xs font-medium text-zinc-400 mb-2">Birth Date</label>
-                  <input type="date" className="w-full px-4 py-3 glass-input" value={candidateData.birth_date} onChange={e => setCandidateData({...candidateData, birth_date: e.target.value})} required />
+              {/* Date & Time */}
+              <div className="grid grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-[13px] font-medium text-zinc-300 mb-3">
+                    Birth Date
+                  </label>
+                  <input
+                    type="date"
+                    className="w-full px-5 py-4 glass-input text-[15px]"
+                    value={candidateData.birth_date}
+                    onChange={e => setCandidateData({...candidateData, birth_date: e.target.value})}
+                    required
+                  />
                 </div>
-                <div className="group">
-                  <label className="block text-xs font-medium text-zinc-400 mb-2">Birth Time</label>
-                  <input type="time" className="w-full px-4 py-3 glass-input" value={candidateData.birth_time} onChange={e => setCandidateData({...candidateData, birth_time: e.target.value})} />
+                <div>
+                  <label className="block text-[13px] font-medium text-zinc-300 mb-3">
+                    Birth Time
+                  </label>
+                  <input
+                    type="time"
+                    className="w-full px-5 py-4 glass-input text-[15px]"
+                    value={candidateData.birth_time}
+                    onChange={e => setCandidateData({...candidateData, birth_time: e.target.value})}
+                  />
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 pt-2">
-                <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 text-sm font-semibold tracking-wide disabled:opacity-50 disabled:cursor-not-allowed">
-                  <span className="flex items-center justify-center gap-2">
-                    {loading && !batchProgress ? <><Activity className="w-4 h-4 animate-spin" /> Processing...</> : <><Target className="w-4 h-4" /> Generate Report</>}
+              {/* Buttons */}
+              <div className="flex flex-col gap-4 pt-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 font-semibold text-white text-[15px] tracking-wide transition-all hover:shadow-xl hover:shadow-purple-900/30 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                >
+                  <span className="flex items-center justify-center gap-3">
+                    {loading && !batchProgress
+                      ? <><Activity className="w-5 h-5 animate-spin" /> Processing...</>
+                      : <><Target className="w-5 h-5" /> Generate Report</>
+                    }
                   </span>
                 </button>
-                
+
                 <div className="relative w-full">
                   <input type="file" accept=".csv" onChange={handleCSVUpload} disabled={loading} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
-                  <div className="btn-ghost w-full py-3 text-xs font-semibold flex items-center justify-center gap-2">
-                     <Upload className="w-4 h-4" /> Batch Import (CSV)
+                  <div className="w-full py-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-zinc-400 text-[13px] font-semibold flex items-center justify-center gap-2.5 hover:bg-white/[0.06] hover:text-white transition-all cursor-pointer">
+                    <Upload className="w-4 h-4" />
+                    Batch Import (CSV)
                   </div>
                 </div>
-                <p className="text-[11px] text-zinc-500 text-center font-mono">Format: Name, YYYY-MM-DD, HH:MM</p>
+
+                <p className="text-[11px] text-zinc-600 text-center font-mono tracking-wide">
+                  Format: Name, YYYY-MM-DD, HH:MM
+                </p>
               </div>
             </form>
           </div>
         </motion.div>
 
-        {/* Right Dashboard */}
-        <div className="xl:col-span-8 min-h-[500px] relative">
+        {/* ════ RIGHT: RESULTS DASHBOARD ════ */}
+        <div className="xl:col-span-8 relative">
           <AnimatePresence mode="wait">
+
+            {/* Empty State */}
             {!analysisResult && !loading ? (
-              <motion.div key="empty" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="h-full flex flex-col items-center justify-center glass-card rounded-2xl p-12 text-center border-dashed border border-white/[0.08]">
-                <Compass className="w-12 h-12 text-purple-500/40 mb-5 animate-[spin_30s_linear_infinite]" />
-                <h3 className="text-2xl font-semibold text-zinc-200 mb-3" style={{fontFamily: "'Cinzel', serif"}}>Cyclical Patterns of the Universe</h3>
-                <div className="max-w-xl space-y-3 text-zinc-400 text-sm leading-relaxed">
-                  <p>Ilmu pembacaan karakter (Astrology, BaZi, Primbon, Falakiyah) bukanlah suatu hal yang magis atau gaib. Alam semesta bekerja berdasarkan hukum Tuhan yang bersifat universal dan <strong className="text-zinc-300">siklikal</strong> (memiliki pola yang berulang).</p>
-                  <p>Sejalan dengan temuan dalam jurnal <em>Chronobiology</em> dan <em>Personality and Individual Differences</em>, lingkungan awal dan siklus kosmik terbukti mempengaruhi temperamen dasar manusia secara biologis.</p>
-                  <p>Karena polanya tetap, probabilitas dari suatu karakter dapat dipetakan. Hasil analisis ini memberikan kerangka probabilitas yang dapat dijadikan bahan pertimbangan strategis oleh HRD.</p>
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="card rounded-2xl p-14 lg:p-16 text-center flex flex-col items-center justify-center min-h-[500px] border-dashed"
+              >
+                <div className="w-20 h-20 rounded-2xl bg-purple-500/8 border border-purple-500/10 flex items-center justify-center mb-8">
+                  <Compass className="w-10 h-10 text-purple-500/40 animate-[spin_30s_linear_infinite]" />
+                </div>
+                <h3 className="text-2xl font-semibold text-zinc-200 mb-5" style={{fontFamily: "'Cinzel', serif"}}>
+                  Cyclical Patterns of the Universe
+                </h3>
+                <div className="max-w-lg space-y-5 text-zinc-400 text-[15px] leading-[1.9]">
+                  <p>
+                    Ilmu pembacaan karakter (Astrology, BaZi, Primbon, Falakiyah) bukanlah suatu hal yang magis atau gaib. Alam semesta bekerja berdasarkan hukum Tuhan yang bersifat universal dan <strong className="text-zinc-200 font-medium">siklikal</strong>.
+                  </p>
+                  <p>
+                    Sejalan dengan temuan dalam jurnal <em className="text-zinc-300">Chronobiology</em> dan <em className="text-zinc-300">Personality and Individual Differences</em>, lingkungan awal dan siklus kosmik mempengaruhi temperamen dasar manusia secara biologis.
+                  </p>
+                  <p>
+                    Hasil analisis ini memberikan kerangka probabilitas yang dapat dijadikan bahan pertimbangan strategis oleh HRD.
+                  </p>
                 </div>
               </motion.div>
+
             ) : loading ? (
-               <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full min-h-[400px] flex flex-col items-center justify-center">
-                <div className="relative w-20 h-20 flex items-center justify-center">
+              /* Loading State */
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="min-h-[500px] flex flex-col items-center justify-center"
+              >
+                <div className="relative w-24 h-24 flex items-center justify-center mb-8">
                   <div className="absolute inset-0 border-2 border-t-purple-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin"></div>
-                  <Sparkles className="w-6 h-6 text-white animate-pulse" />
+                  <Sparkles className="w-7 h-7 text-white animate-pulse" />
                 </div>
                 {batchProgress ? (
-                   <>
-                     <p className="mt-8 tracking-widest text-sm text-purple-300 uppercase animate-pulse">Batch Processing CSV...</p>
-                     <p className="mt-2 text-2xl font-bold text-white">{batchProgress.current} / {batchProgress.total}</p>
-                   </>
+                  <>
+                    <p className="tracking-[0.25em] text-[13px] text-purple-300 uppercase animate-pulse font-semibold">
+                      Batch Processing CSV...
+                    </p>
+                    <p className="mt-3 text-3xl font-bold text-white">
+                      {batchProgress.current} <span className="text-zinc-500">/</span> {batchProgress.total}
+                    </p>
+                  </>
                 ) : (
-                   <p className="mt-8 tracking-widest text-sm text-purple-300 uppercase animate-pulse">Aggregating Esoteric Databanks...</p>
+                  <p className="tracking-[0.25em] text-[13px] text-purple-300 uppercase animate-pulse font-semibold">
+                    Aggregating Esoteric Databanks...
+                  </p>
                 )}
               </motion.div>
+
             ) : (
-              <motion.div key="results" id="report-content" variants={containerVariants} initial="hidden" animate="show" className="h-full flex flex-col gap-6">
-                
-                {/* Top Header & Synergy */}
+              /* Results */
+              <motion.div
+                key="results"
+                id="report-content"
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+                className="flex flex-col gap-10"
+              >
+
+                {/* ── Result Header ── */}
                 <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="glass-panel p-8 rounded-[2rem] flex items-center gap-8 relative overflow-hidden group hover:border-purple-500/30 transition-colors">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500"><Users className="w-32 h-32" /></div>
-                    <div className="relative z-10">
-                      <p className="text-sm tracking-[0.2em] text-slate-400 uppercase mb-2 font-medium">Synergy Index</p>
-                      <p className="text-6xl font-black text-white drop-shadow-lg">{analysisResult.overall_score}<span className="text-2xl text-purple-400 font-bold">/100</span></p>
+                  {/* Score Card */}
+                  <div className="card p-8 rounded-2xl flex items-center gap-6 group">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600/20 to-fuchsia-600/20 border border-purple-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <Users className="w-7 h-7 text-purple-400" />
+                    </div>
+                    <div>
+                      <p className="text-[12px] tracking-[0.2em] text-zinc-500 uppercase font-semibold mb-1">Synergy Index</p>
+                      <p className="text-5xl font-black text-white leading-none">
+                        {analysisResult.overall_score}
+                        <span className="text-xl text-purple-400/70 font-bold ml-1">/100</span>
+                      </p>
                     </div>
                   </div>
-                  
-                  <div className="glass-panel p-8 rounded-[2rem] md:col-span-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                     <div>
-                       <h3 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-500 tracking-tight">{analysisResult.name}</h3>
-                       <p className="text-base text-purple-300 mt-3 flex items-center gap-2 font-medium tracking-wide"><Search className="w-5 h-5" /> Comprehensive Multi-Engine Profile</p>
-                     </div>
-                     
-                     <div className="flex flex-wrap gap-4 w-full md:w-auto">
-                       <button onClick={handleDownloadPDF} className="px-6 py-3 bg-purple-500/20 text-purple-300 hover:bg-purple-500/40 rounded-2xl flex items-center gap-3 text-base font-bold transition-all hover:scale-105 active:scale-95">
-                         <Download className="w-5 h-5" /> PDF Report
-                       </button>
-                       <div className="flex bg-black/40 rounded-2xl p-1.5 border border-white/5 w-full md:w-auto">
-                          <button onClick={() => setActiveTab('bazi')} className={`flex-1 md:flex-none px-6 py-3 rounded-xl text-base font-bold transition-all ${activeTab === 'bazi' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : 'text-slate-400 hover:text-white'}`}>BaZi</button>
-                          <button onClick={() => setActiveTab('primbon')} className={`flex-1 md:flex-none px-6 py-3 rounded-xl text-base font-bold transition-all ${activeTab === 'primbon' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:text-white'}`}>Primbon</button>
-                          <button onClick={() => setActiveTab('falakiyah')} className={`flex-1 md:flex-none px-6 py-3 rounded-xl text-base font-bold transition-all ${activeTab === 'falakiyah' ? 'bg-fuchsia-600 text-white shadow-lg shadow-fuchsia-900/50' : 'text-slate-400 hover:text-white'}`}>Falakiyah</button>
-                       </div>
-                     </div>
+
+                  {/* Name + Tab Switcher */}
+                  <div className="card p-8 rounded-2xl md:col-span-2 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                    <div>
+                      <h3 className="text-3xl lg:text-4xl font-bold text-white tracking-tight">{analysisResult.name}</h3>
+                      <p className="text-[14px] text-zinc-400 mt-2 flex items-center gap-2 font-medium">
+                        <Search className="w-4 h-4 text-purple-400" />
+                        Multi-Engine Profile Report
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-3">
+                      <button onClick={handleDownloadPDF} className="px-5 py-3 rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-300 hover:bg-white/[0.08] hover:text-white flex items-center gap-2 text-[13px] font-semibold transition-all">
+                        <Download className="w-4 h-4" /> PDF
+                      </button>
+                      <div className="flex rounded-xl bg-black/30 border border-white/[0.05] p-1 gap-1">
+                        <button onClick={() => setActiveTab('bazi')} className={`px-5 py-2.5 rounded-lg text-[13px] font-semibold transition-all ${activeTab === 'bazi' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/40' : 'text-zinc-500 hover:text-white'}`}>BaZi</button>
+                        <button onClick={() => setActiveTab('primbon')} className={`px-5 py-2.5 rounded-lg text-[13px] font-semibold transition-all ${activeTab === 'primbon' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40' : 'text-zinc-500 hover:text-white'}`}>Primbon</button>
+                        <button onClick={() => setActiveTab('falakiyah')} className={`px-5 py-2.5 rounded-lg text-[13px] font-semibold transition-all ${activeTab === 'falakiyah' ? 'bg-fuchsia-600 text-white shadow-lg shadow-fuchsia-900/40' : 'text-zinc-500 hover:text-white'}`}>Falakiyah</button>
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
 
-                {/* Holistic Synthesis */}
+                {/* ── Holistic Synthesis ── */}
                 {!analysisResult.error && analysisResult.results?.synthesis && (
-                   <motion.div variants={itemVariants} className="glass-panel p-10 lg:p-12 rounded-[2.5rem] bg-gradient-to-br from-blue-900/20 via-indigo-900/10 to-cyan-900/20 border-indigo-500/30 relative overflow-hidden">
-                     <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full"></div>
-                     <h4 className="text-base font-bold tracking-[0.25em] text-cyan-400 uppercase mb-8 flex items-center gap-3">
-                       <Sparkles className="w-6 h-6"/> Holistic Synthesis & Conclusion
-                     </h4>
-                     <div className="space-y-6 text-slate-200 text-xl leading-loose synthesis-prose relative z-10 font-medium">
-                       {analysisResult.results.synthesis.split('\n\n').map((paragraph, idx) => {
-                         const formattedHtml = paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                         return <p key={idx} dangerouslySetInnerHTML={{ __html: formattedHtml }} />;
-                       })}
-                     </div>
-                   </motion.div>
+                  <motion.div variants={itemVariants} className="card p-10 lg:p-12 rounded-2xl bg-gradient-to-br from-blue-950/30 via-indigo-950/20 to-cyan-950/20 border-indigo-500/15 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+                    <h4 className="text-[12px] font-bold tracking-[0.25em] text-cyan-400 uppercase mb-8 flex items-center gap-3">
+                      <Sparkles className="w-5 h-5" /> Holistic Synthesis & Conclusion
+                    </h4>
+                    <div className="space-y-6 text-zinc-200 text-[17px] leading-[2] synthesis-prose relative z-10">
+                      {analysisResult.results.synthesis.split('\n\n').map((paragraph, idx) => {
+                        const formattedHtml = paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                        return <p key={idx} dangerouslySetInnerHTML={{ __html: formattedHtml }} />;
+                      })}
+                    </div>
+                  </motion.div>
                 )}
 
+                {/* ── Tab Content ── */}
                 {analysisResult.error ? (
-                  <motion.div variants={itemVariants} className="glass-panel p-8 rounded-3xl flex-1 flex flex-col items-center justify-center border-red-500/30">
-                    <Compass className="w-16 h-16 text-red-500/50 mb-4" />
+                  <motion.div variants={itemVariants} className="card p-12 rounded-2xl flex flex-col items-center justify-center border-red-500/20">
+                    <Compass className="w-14 h-14 text-red-500/40 mb-5" />
                     <h3 className="text-xl font-bold text-red-400">Analysis Error</h3>
-                    <p className="text-slate-300 mt-2 text-center max-w-md">{analysisResult.error}</p>
+                    <p className="text-zinc-400 mt-3 text-center max-w-md text-[15px] leading-relaxed">{analysisResult.error}</p>
                   </motion.div>
                 ) : (
-                  <motion.div variants={itemVariants} className="glass-panel p-8 rounded-3xl flex-1 flex flex-col">
+                  <motion.div variants={itemVariants} className="card p-10 rounded-2xl flex-1">
                     <AnimatePresence mode="wait">
+
+                      {/* BaZi Tab */}
                       {activeTab === 'bazi' && (
-                        <motion.div key="tab-bazi" initial={{opacity: 0, y: 10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}} className="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full">
+                        <motion.div key="tab-bazi" initial={{opacity: 0, y: 12}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-12}} className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                           <div className="space-y-10">
                             <div>
-                               <h4 className="text-sm font-bold tracking-[0.2em] text-fuchsia-400 uppercase mb-6 flex items-center gap-3"><Hexagon className="w-5 h-5"/> Core BaZi Traits</h4>
-                               <div className="flex flex-wrap gap-3">
-                                 {analysisResult.results.bazi.traits.map((t, i) => (
-                                   <span key={i} className="px-5 py-3 rounded-full text-base font-semibold bg-purple-500/10 border border-purple-400/30 text-purple-100 shadow-lg shadow-purple-900/20">{t}</span>
-                                 ))}
-                               </div>
+                              <h4 className="text-[12px] font-bold tracking-[0.2em] text-fuchsia-400 uppercase mb-6 flex items-center gap-3"><Hexagon className="w-4 h-4"/> Core BaZi Traits</h4>
+                              <div className="flex flex-wrap gap-3">
+                                {analysisResult.results.bazi.traits.map((t, i) => (
+                                  <span key={i} className="px-5 py-3 rounded-xl text-[14px] font-semibold bg-purple-500/8 border border-purple-400/20 text-purple-100">{t}</span>
+                                ))}
+                              </div>
                             </div>
                             <div>
-                               <h4 className="text-sm font-bold tracking-[0.2em] text-blue-400 uppercase mb-6 flex items-center gap-3"><Briefcase className="w-5 h-5"/> Ideal Roles</h4>
-                               <ul className="space-y-4">
-                                 {analysisResult.results.bazi.best_roles.map((r, i) => (
-                                   <li key={i} className="flex items-center gap-4 bg-black/20 p-4 rounded-xl border border-white/5 text-lg text-slate-200"><div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>{r}</li>
-                                 ))}
-                               </ul>
+                              <h4 className="text-[12px] font-bold tracking-[0.2em] text-blue-400 uppercase mb-6 flex items-center gap-3"><Briefcase className="w-4 h-4"/> Ideal Roles</h4>
+                              <ul className="space-y-4">
+                                {analysisResult.results.bazi.best_roles.map((r, i) => (
+                                  <li key={i} className="flex items-center gap-4 bg-white/[0.02] p-5 rounded-xl border border-white/[0.04] text-[15px] text-zinc-200 leading-relaxed">
+                                    <div className="w-2 h-2 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50 shrink-0"></div>{r}
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
                           </div>
-                          <div className="flex flex-col items-center bg-black/10 rounded-3xl p-8 border border-white/5 relative">
-                            <h4 className="text-sm font-bold tracking-[0.2em] text-emerald-400 uppercase w-full text-center mb-6">Element Distribution<br/><span className="text-slate-400 text-xs mt-2 block">Day Master: {analysisResult.results.bazi.day_master}</span></h4>
-                            <div className="w-full h-80 mt-2">
+                          <div className="flex flex-col items-center bg-white/[0.015] rounded-2xl p-8 border border-white/[0.04]">
+                            <h4 className="text-[12px] font-bold tracking-[0.2em] text-emerald-400 uppercase w-full text-center mb-2">Element Distribution</h4>
+                            <p className="text-zinc-500 text-[12px] mb-6">Day Master: {analysisResult.results.bazi.day_master}</p>
+                            <div className="w-full h-72">
                               <ResponsiveContainer width="100%" height="100%">
                                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                                  <PolarGrid stroke="rgba(255,255,255,0.15)" />
-                                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#e2e8f0', fontSize: 13, fontWeight: 'bold' }} />
-                                  <Radar dataKey="Value" stroke="#c084fc" strokeWidth={3} fill="rgba(192,132,252,0.4)" />
+                                  <PolarGrid stroke="rgba(255,255,255,0.08)" />
+                                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#a1a1aa', fontSize: 12, fontWeight: '500' }} />
+                                  <Radar dataKey="Value" stroke="#c084fc" strokeWidth={2} fill="rgba(192,132,252,0.2)" />
                                 </RadarChart>
                               </ResponsiveContainer>
                             </div>
@@ -296,57 +409,64 @@ function NewAnalysis() {
                         </motion.div>
                       )}
 
+                      {/* Primbon Tab */}
                       {activeTab === 'primbon' && (
-                        <motion.div key="tab-primbon" initial={{opacity: 0, y: 10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}} className="h-full flex flex-col justify-center items-center text-center space-y-6">
-                           <BookOpen className="w-16 h-16 text-blue-400 mb-4" />
-                           <h4 className="text-lg tracking-widest text-slate-300 uppercase">Javanese Weton</h4>
-                           <h2 className="text-5xl font-bold text-white mb-2">{analysisResult.results.primbon.weton}</h2>
-                           <p className="text-xl text-blue-300">Neptu Score: {analysisResult.results.primbon.neptu_score}</p>
-                           
-                           <div className="glass-card p-6 rounded-2xl max-w-xl w-full text-left mt-8">
-                             <h4 className="text-sm tracking-[0.2em] text-fuchsia-400 uppercase mb-2">Character Destiny</h4>
-                             <p className="text-lg leading-relaxed text-slate-200">{analysisResult.results.primbon.character}</p>
-                             <div className="mt-4 pt-4 border-t border-white/10 flex justify-between">
-                               <span className="text-sm text-slate-400">Work Style</span>
-                               <span className="font-bold text-blue-400">{analysisResult.results.primbon.work_style}</span>
-                             </div>
-                           </div>
+                        <motion.div key="tab-primbon" initial={{opacity: 0, y: 12}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-12}} className="flex flex-col items-center text-center py-8 space-y-8">
+                          <div className="w-20 h-20 rounded-2xl bg-blue-500/10 border border-blue-500/15 flex items-center justify-center">
+                            <BookOpen className="w-9 h-9 text-blue-400" />
+                          </div>
+                          <div>
+                            <p className="text-[12px] tracking-[0.25em] text-zinc-500 uppercase font-semibold mb-3">Javanese Weton</p>
+                            <h2 className="text-4xl font-bold text-white mb-3">{analysisResult.results.primbon.weton}</h2>
+                            <p className="text-[16px] text-blue-300 font-medium">Neptu Score: {analysisResult.results.primbon.neptu_score}</p>
+                          </div>
+
+                          <div className="card p-8 rounded-2xl max-w-lg w-full text-left">
+                            <h4 className="text-[12px] tracking-[0.2em] text-fuchsia-400 uppercase font-semibold mb-4">Character Destiny</h4>
+                            <p className="text-[16px] leading-[1.9] text-zinc-200">{analysisResult.results.primbon.character}</p>
+                            <div className="mt-6 pt-6 border-t border-white/[0.05] flex justify-between items-center">
+                              <span className="text-[13px] text-zinc-500">Work Style</span>
+                              <span className="font-bold text-blue-400 text-[14px]">{analysisResult.results.primbon.work_style}</span>
+                            </div>
+                          </div>
                         </motion.div>
                       )}
 
+                      {/* Falakiyah Tab */}
                       {activeTab === 'falakiyah' && (
-                        <motion.div key="tab-falakiyah" initial={{opacity: 0, y: 10}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-10}} className="h-full flex flex-col gap-8 w-full">
-                          
-                          {/* Top Info Cards */}
+                        <motion.div key="tab-falakiyah" initial={{opacity: 0, y: 12}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-12}} className="flex flex-col gap-10 w-full">
+
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div className="glass-panel p-8 rounded-[2rem] bg-gradient-to-br from-fuchsia-900/20 to-purple-900/10 border-fuchsia-500/20 shadow-lg">
-                              <h4 className="text-sm font-bold tracking-[0.2em] text-fuchsia-400 uppercase mb-6 flex items-center gap-3"><Sun className="w-5 h-5"/> Hisab Jummal Numerology</h4>
-                              
-                              <div className="mb-6 bg-black/40 p-5 rounded-2xl font-mono text-sm text-slate-300 break-words leading-relaxed shadow-inner border border-white/5">
+                            {/* Hisab Jummal */}
+                            <div className="card p-9 rounded-2xl bg-gradient-to-br from-fuchsia-950/20 to-purple-950/10 border-fuchsia-500/10">
+                              <h4 className="text-[12px] font-bold tracking-[0.2em] text-fuchsia-400 uppercase mb-7 flex items-center gap-3"><Sun className="w-4 h-4"/> Hisab Jummal Numerology</h4>
+
+                              <div className="mb-7 bg-black/30 p-5 rounded-xl font-mono text-[13px] text-zinc-400 break-words leading-[1.8] border border-white/[0.03]">
                                 {analysisResult.results.falakiyah.numerology?.calculation}
                               </div>
-                              <div className="flex justify-between items-center bg-fuchsia-900/30 p-5 rounded-2xl border border-fuchsia-500/30">
-                                <span className="text-sm font-bold text-fuchsia-300">Reduction Rule:</span>
+                              <div className="flex justify-between items-center bg-fuchsia-900/20 p-5 rounded-xl border border-fuchsia-500/15">
+                                <span className="text-[13px] font-semibold text-fuchsia-300">Reduction Rule:</span>
                                 <span className="font-bold text-white font-mono">{analysisResult.results.falakiyah.numerology?.modulo_rule}</span>
                               </div>
-                              <div className="mt-6 flex items-center gap-5">
-                                <span className="text-5xl drop-shadow-lg">{analysisResult.results.falakiyah.numerology?.icon}</span>
+                              <div className="mt-7 flex items-center gap-5">
+                                <span className="text-4xl">{analysisResult.results.falakiyah.numerology?.icon}</span>
                                 <div>
-                                  <p className="font-bold text-white text-2xl">{analysisResult.results.falakiyah.numerology?.element}</p>
-                                  <p className="text-xs text-slate-400 uppercase tracking-[0.2em] mt-1 font-semibold">Core Ruling Energy</p>
+                                  <p className="font-bold text-white text-xl">{analysisResult.results.falakiyah.numerology?.element}</p>
+                                  <p className="text-[11px] text-zinc-500 uppercase tracking-[0.2em] mt-1 font-semibold">Core Ruling Energy</p>
                                 </div>
                               </div>
                             </div>
 
-                            <div className="glass-panel p-8 rounded-[2rem] bg-gradient-to-br from-emerald-900/20 to-teal-900/10 border-emerald-500/20 flex flex-col justify-between shadow-lg">
+                            {/* Spiritual Patch */}
+                            <div className="card p-9 rounded-2xl bg-gradient-to-br from-emerald-950/20 to-teal-950/10 border-emerald-500/10 flex flex-col justify-between">
                               <div>
-                                <h4 className="text-sm font-bold tracking-[0.2em] text-emerald-400 uppercase mb-6 flex items-center gap-3"><Sparkles className="w-5 h-5"/> Spiritual Patch (Dhikr)</h4>
-                                <p className="text-base text-slate-300 mb-6 leading-loose">
+                                <h4 className="text-[12px] font-bold tracking-[0.2em] text-emerald-400 uppercase mb-7 flex items-center gap-3"><Sparkles className="w-4 h-4"/> Spiritual Patch (Dhikr)</h4>
+                                <p className="text-[15px] text-zinc-300 mb-7 leading-[1.9]">
                                   Based on the candidate's core planetary energy, the following <strong className="text-emerald-300">Asma Allah</strong> are recommended to balance and maximize their potential:
                                 </p>
                               </div>
-                              <div className="bg-emerald-900/30 p-8 rounded-2xl border border-emerald-500/30 text-center shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]">
-                                <p className="text-2xl md:text-3xl font-black text-emerald-300 drop-shadow-md">
+                              <div className="bg-emerald-900/20 p-8 rounded-xl border border-emerald-500/15 text-center">
+                                <p className="text-2xl lg:text-3xl font-black text-emerald-300">
                                   {analysisResult.results.falakiyah.numerology?.asmaul_husna}
                                 </p>
                               </div>
@@ -354,22 +474,22 @@ function NewAnalysis() {
                           </div>
 
                           {/* HR Insight */}
-                          <div className="bg-gradient-to-r from-black/40 to-black/20 p-8 rounded-[2rem] border border-white/5 shadow-inner">
-                            <h4 className="text-sm font-bold tracking-[0.2em] text-slate-400 uppercase mb-4">Astronomical HR Insight</h4>
-                            <p className="text-slate-200 text-xl leading-relaxed">{analysisResult.results.falakiyah.hr_insight}</p>
+                          <div className="card p-9 rounded-2xl bg-gradient-to-r from-black/30 to-black/10">
+                            <h4 className="text-[12px] font-bold tracking-[0.2em] text-zinc-400 uppercase mb-5">Astronomical HR Insight</h4>
+                            <p className="text-zinc-200 text-[17px] leading-[2]">{analysisResult.results.falakiyah.hr_insight}</p>
                           </div>
-                          
-                          {/* Planetary Positions List */}
+
+                          {/* Planetary Positions */}
                           <div>
-                            <h4 className="text-sm font-bold tracking-[0.2em] text-purple-400 uppercase mb-6 flex items-center gap-3"><Activity className="w-5 h-5"/> Planetary Impacts on Work Behavior</h4>
+                            <h4 className="text-[12px] font-bold tracking-[0.2em] text-purple-400 uppercase mb-7 flex items-center gap-3"><Activity className="w-4 h-4"/> Planetary Impacts on Work Behavior</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               {analysisResult.results.falakiyah.planetary_positions?.map((p, i) => (
-                                <div key={i} className="flex flex-col gap-3 p-6 bg-purple-900/10 rounded-2xl border border-purple-500/10 hover:border-purple-500/30 transition-all hover:bg-purple-900/20">
-                                  <div className="flex justify-between items-center border-b border-purple-500/20 pb-3">
-                                    <span className="text-lg text-slate-300 font-black">{p.name}</span>
-                                    <span className="text-base text-fuchsia-300 font-bold px-3 py-1 bg-fuchsia-500/10 rounded-lg">{p.constellation}</span>
+                                <div key={i} className="card p-7 rounded-2xl hover:border-purple-500/20 transition-all">
+                                  <div className="flex justify-between items-center mb-4 pb-4 border-b border-white/[0.04]">
+                                    <span className="text-[15px] text-zinc-200 font-bold">{p.name}</span>
+                                    <span className="text-[12px] text-fuchsia-300 font-semibold px-3 py-1.5 bg-fuchsia-500/8 rounded-lg border border-fuchsia-500/15">{p.constellation}</span>
                                   </div>
-                                  <p className="text-base text-slate-300 leading-relaxed mt-1 font-medium">{p.implication}</p>
+                                  <p className="text-[14px] text-zinc-400 leading-[1.8]">{p.implication}</p>
                                 </div>
                               ))}
                             </div>
