@@ -53,10 +53,10 @@ function TeamMatcher() {
   };
 
   return (
-    <div className="w-full font-montserrat">
+    <div className="w-full font-montserrat relative">
       {/* Page Header */}
-      <div className="mb-12">
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border-2 border-white text-clay-orange-dark text-xs font-extrabold tracking-wider mb-6 shadow-clay-card">
+      <div className="mb-12 text-center md:text-left relative z-10">
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border-2 border-white text-clay-orange-dark text-xs font-extrabold tracking-wider mb-6 shadow-clay-card floating-slow">
           <Users className="w-4 h-4 text-clay-orange" />
           TEAM ALIGNMENT
         </div>
@@ -68,12 +68,17 @@ function TeamMatcher() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-14 flex-1">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16 flex-1 relative z-10 items-stretch">
         
         {/* Selection Area */}
-        <div className="card p-8 lg:p-10 flex flex-col justify-between">
+        <div className="card p-8 lg:p-10 flex flex-col justify-between slant-left slant-hover shadow-clay-card relative">
+          {/* Decorative tag */}
+          <div className="absolute -top-3.5 left-8 px-4 py-1.5 bg-gradient-to-r from-clay-orange to-clay-orange-dark text-white text-[10px] font-black rounded-full shadow-clay-btn tracking-widest uppercase">
+            👥 Tim
+          </div>
+
           <div>
-            <div className="flex items-center gap-3.5 mb-8 pb-6 border-b border-clay-peach/40">
+            <div className="flex items-center gap-3.5 mb-8 pb-6 border-b border-clay-peach/40 mt-2">
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-white to-clay-peach flex items-center justify-center shadow-clay-card border-2 border-white">
                 <Users className="w-5 h-5 text-clay-orange" />
               </div>
@@ -128,7 +133,7 @@ function TeamMatcher() {
                         const c = candidates.find(can => can.id === id);
                         if (!c) return null;
                         return (
-                          <motion.div initial={{opacity:0, x:-20}} animate={{opacity:1, x:0}} key={id} className="flex justify-between items-center p-5 rounded-2xl bg-white border border-clay-peach/60 shadow-clay-card">
+                          <motion.div initial={{opacity:0, x:-20}} animate={{opacity:1, x:0}} key={id} className="flex justify-between items-center p-5 rounded-2xl bg-white border border-clay-peach/60 shadow-clay-card hover:scale-102 transition-transform">
                             <div>
                               <p className="font-black text-clay-dark text-base">{c.name}</p>
                               <p className="text-xs text-clay-muted font-bold mt-1">ID: #{c.id}</p>
@@ -164,28 +169,36 @@ function TeamMatcher() {
         </div>
 
         {/* Result Area */}
-        <div className="card p-8 lg:p-10 flex flex-col justify-center items-center">
+        <div className="card p-8 lg:p-10 flex flex-col justify-center items-center slant-right slant-hover shadow-clay-card relative">
+          {/* Decorative tag */}
+          <div className="absolute -top-3.5 left-8 px-4 py-1.5 bg-gradient-to-r from-clay-orange to-clay-orange-dark text-white text-[10px] font-black rounded-full shadow-clay-btn tracking-widest uppercase">
+            📊 Result
+          </div>
+
           <AnimatePresence mode="wait">
             {!synergyResult ? (
-              <motion.div key="empty" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="text-center opacity-60">
-                <Users className="w-24 h-24 mx-auto mb-6 text-clay-peach-dark" />
+              <motion.div key="empty" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="text-center opacity-60 mt-2">
+                <Users className="w-24 h-24 mx-auto mb-6 text-clay-peach-dark floating-slow" />
                 <p className="text-xs font-bold text-clay-muted uppercase tracking-widest">Menunggu Pemilihan Anggota Tim</p>
               </motion.div>
             ) : (
-              <motion.div key="result" initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="text-center w-full">
+              <motion.div key="result" initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="text-center w-full mt-2">
                 {synergyResult.error ? (
                   <div className="text-red-700 bg-red-50 p-8 rounded-3xl border border-red-200 shadow-clay-card">
                     <AlertTriangle className="w-16 h-16 mx-auto mb-6 text-red-500" />
                     <p className="text-base font-bold leading-relaxed">{synergyResult.error}</p>
                   </div>
                 ) : (
-                  <div>
+                  <div className="flex flex-col items-center">
                     <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-clay-orange-dark mb-4">Team Synergy Score</h4>
-                    <div className="text-8xl font-black text-clay-dark mb-8 drop-shadow-sm leading-none">
+                    
+                    {/* Floating 3D score box */}
+                    <div className="text-8xl font-black text-clay-dark mb-10 drop-shadow-sm leading-none bg-gradient-to-br from-white to-clay-peach/20 border-2 border-white shadow-clay-card rounded-[32px] px-10 py-6 relative z-10 slant-left">
                       {synergyResult.team_synergy_score}<span className="text-3xl text-clay-peach-dark font-bold">/100</span>
                     </div>
                     
-                    <div className="card p-8 rounded-2xl mx-auto w-full text-left bg-gradient-to-br from-white to-clay-peach/20 border-white">
+                    {/* Verdict overlaps the score box slightly */}
+                    <div className="card p-8 rounded-2xl mx-auto w-full text-left bg-gradient-to-br from-white to-clay-peach/20 border-white shadow-clay-card md:-mt-6 relative z-0 slant-right">
                        <div className="flex items-center gap-3.5 mb-6 border-b border-clay-peach/40 pb-4">
                          {synergyResult.team_synergy_score > 70 ? (
                            <ShieldCheck className="w-7 h-7 text-emerald-600" />

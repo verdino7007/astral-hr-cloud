@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Database, Trash2, Edit2, Loader, Save, X } from 'lucide-react';
+import { Database, Trash2, Edit2, Loader, Save, X, Sparkles } from 'lucide-react';
 
 function CandidateVault() {
   const [candidates, setCandidates] = useState([]);
@@ -59,10 +59,15 @@ function CandidateVault() {
   };
 
   return (
-    <div className="w-full font-montserrat">
+    <div className="w-full font-montserrat relative">
+      {/* Decorative floating sphere */}
+      <div className="absolute -top-10 -right-6 w-20 h-20 rounded-full bg-gradient-to-br from-white to-clay-peach border-2 border-white shadow-clay-card z-0 flex items-center justify-center floating-medium">
+        <Sparkles className="w-8 h-8 text-clay-orange" />
+      </div>
+
       {/* Page Header */}
-      <div className="mb-12">
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border-2 border-white text-clay-orange-dark text-xs font-extrabold tracking-wider mb-6 shadow-clay-card">
+      <div className="mb-12 text-center md:text-left relative z-10">
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border-2 border-white text-clay-orange-dark text-xs font-extrabold tracking-wider mb-6 shadow-clay-card floating-slow">
           <Database className="w-4 h-4 text-clay-orange" />
           DATABASE REPOSITORY
         </div>
@@ -74,14 +79,19 @@ function CandidateVault() {
         </p>
       </div>
 
-      {/* Main Table Container */}
-      <div className="card overflow-hidden shadow-clay-card">
+      {/* Main Table Container (Slanted Polaroid-style card) */}
+      <div className="card overflow-hidden shadow-clay-card relative z-10 slant-left slant-hover">
+        {/* Floating sticker label */}
+        <div className="absolute -top-3.5 left-8 px-4 py-1.5 bg-gradient-to-r from-clay-orange to-clay-orange-dark text-white text-[10px] font-black rounded-full shadow-clay-btn tracking-widest uppercase">
+          📂 Archive
+        </div>
+
         {loading ? (
           <div className="p-20 flex justify-center items-center">
             <Loader className="w-8 h-8 animate-spin text-clay-orange" />
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto mt-2">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-clay-bg/75 border-b border-clay-peach/40 text-[10px] font-extrabold tracking-wider uppercase text-clay-muted">
