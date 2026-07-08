@@ -93,7 +93,6 @@ h1, h2, h3, h4, h5, h6 {
   100% { transform: translateY(0px) rotate(-0.5deg); }
 }
 
-/* ── Typewriter Form Fields ── */
 .glass-input {
   background-color: #faf8f2;
   border-bottom: 3px solid #0f0f0f;
@@ -107,12 +106,19 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   font-size: 14px;
   padding: 8px 4px;
+  caret-color: #9e1b1b; /* Red retro typewriter caret */
 }
 
 .glass-input:focus {
   outline: none;
   background-color: #fdfdfc;
   border-bottom-color: #9e1b1b; /* Red pencil edit highlight */
+  animation: typewriter-underline-blink 0.8s infinite steps(2);
+}
+
+@keyframes typewriter-underline-blink {
+  from, to { border-bottom-color: #9e1b1b; }
+  50% { border-bottom-color: transparent; }
 }
 
 .glass-input::placeholder {
