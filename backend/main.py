@@ -1,9 +1,11 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Header, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 import os
 import sys
+import hashlib
+import secrets
 from datetime import datetime
 from typing import List
 
@@ -31,6 +33,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Password hashing utilities
+def hash_password(password: str) -> str:
+    salt = secrets.token_hex(8)
+    hashed = hashlib.sha256((password + salt).encode('utf-8')).hexdigest()
+    return f"{salt}:{hashed}"
+
+def verify_password(password: str, hashed_str: str) -> bool:
+    if not hashed_str or ":" not in hashed_str:
+        return False
+    salt, hashed = hashed_str.split(":", 1)
+    return hashlib.sha256((password + salt).encode('utf-8')).hexdigest() == hashed
+
+# Pydantic schemas for Auth
+class UserSignup(BaseModel):
+    username: str
+    password: str
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
 class CandidateCreate(BaseModel):
     name: str
     birth_date: str  # YYYY-MM-DD
@@ -40,6 +63,85 @@ class CandidateUpdate(BaseModel):
     name: str
     birth_date: str
     birth_time: str = "12:00"
+
+# Dependency to retrieve current authenticated user
+def get_current_user(authorization: str = Header(None), db: Session = Depends(get_db)):
+    if not authorization:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authorization header missing"
+        )
+    token = authorization
+    if authorization.startswith("Bearer "):
+        token = authorization[7:]
+        
+    user = db.query(models.User).filter(models.User.token == token).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Session expired or invalid credentials"
+        )
+    return user
+
+# Authentication Endpoints
+@app.post("/auth/signup")
+def signup(user_data: UserSignup, db: Session = Depends(get_db)):
+    # Check if user already exists
+    existing_user = db.query(models.User).filter(models.User.username == user_data.username).first()
+    if existing_user:
+        raise HTTPException(
+            status_code=400,
+            detail="Username already registered in agency archives"
+        )
+        
+    hashed = hash_password(user_data.password)
+    token = secrets.token_hex(16)
+    
+    new_user = models.User(
+        username=user_data.username,
+        hashed_password=hashed,
+        token=token
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    
+    # Backward compatibility migration:
+    # If this is the FIRST user, associate any legacy unowned candidates to them!
+    user_count = db.query(models.User).count()
+    if user_count == 1:
+        db.query(models.Candidate).filter(models.Candidate.user_id == None).update(
+            {models.Candidate.user_id: new_user.id},
+            synchronize_session=False
+        )
+        db.commit()
+        
+    return {
+        "status": "registered",
+        "username": new_user.username,
+        "token": new_user.token
+    }
+
+@app.post("/auth/login")
+def login(user_data: UserLogin, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.username == user_data.username).first()
+    if not user or not verify_password(user_data.password, user.hashed_password):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid agency credentials"
+        )
+        
+    # Generate new token on login
+    new_token = secrets.token_hex(16)
+    user.token = new_token
+    db.commit()
+    db.refresh(user)
+    
+    return {
+        "status": "authenticated",
+        "username": user.username,
+        "token": user.token
+    }
 
 def synthesize_analysis(bazi, primbon, falakiyah):
     bazi_dm = bazi.get("day_master", "")
@@ -121,7 +223,7 @@ def _run_analysis(name: str, birth_date: str, birth_time: str):
 
 
 @app.post("/analyze")
-def analyze_candidate(candidate: CandidateCreate, db: Session = Depends(get_db)):
+def analyze_candidate(candidate: CandidateCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     try:
         results, overall_score = _run_analysis(candidate.name, candidate.birth_date, candidate.birth_time)
         
@@ -131,7 +233,8 @@ def analyze_candidate(candidate: CandidateCreate, db: Session = Depends(get_db))
             birth_date=candidate.birth_date,
             birth_time=candidate.birth_time,
             overall_score=overall_score,
-            analysis_data=results
+            analysis_data=results,
+            user_id=current_user.id
         )
         db.add(db_candidate)
         db.commit()
@@ -147,14 +250,17 @@ def analyze_candidate(candidate: CandidateCreate, db: Session = Depends(get_db))
         return {"error": str(e)}
 
 @app.get("/candidates")
-def get_candidates(db: Session = Depends(get_db)):
-    return db.query(models.Candidate).all()
+def get_candidates(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return db.query(models.Candidate).filter(models.Candidate.user_id == current_user.id).all()
 
 @app.put("/candidates/{candidate_id}")
-def update_candidate(candidate_id: int, candidate: CandidateUpdate, db: Session = Depends(get_db)):
-    db_candidate = db.query(models.Candidate).filter(models.Candidate.id == candidate_id).first()
+def update_candidate(candidate_id: int, candidate: CandidateUpdate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    db_candidate = db.query(models.Candidate).filter(
+        models.Candidate.id == candidate_id,
+        models.Candidate.user_id == current_user.id
+    ).first()
     if not db_candidate:
-        raise HTTPException(status_code=404, detail="Candidate not found")
+        raise HTTPException(status_code=404, detail="Candidate not found or unauthorized")
         
     try:
         results, overall_score = _run_analysis(candidate.name, candidate.birth_date, candidate.birth_time)
@@ -170,10 +276,13 @@ def update_candidate(candidate_id: int, candidate: CandidateUpdate, db: Session 
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.delete("/candidates/{candidate_id}")
-def delete_candidate(candidate_id: int, db: Session = Depends(get_db)):
-    db_candidate = db.query(models.Candidate).filter(models.Candidate.id == candidate_id).first()
+def delete_candidate(candidate_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    db_candidate = db.query(models.Candidate).filter(
+        models.Candidate.id == candidate_id,
+        models.Candidate.user_id == current_user.id
+    ).first()
     if not db_candidate:
-        raise HTTPException(status_code=404, detail="Candidate not found")
+        raise HTTPException(status_code=404, detail="Candidate not found or unauthorized")
     db.delete(db_candidate)
     db.commit()
     return {"status": "deleted"}
@@ -182,8 +291,13 @@ class SynergyRequest(BaseModel):
     candidate_ids: List[int]
 
 @app.post("/synergy")
-def calculate_team_synergy(req: SynergyRequest, db: Session = Depends(get_db)):
-    candidates = db.query(models.Candidate).filter(models.Candidate.id.in_(req.candidate_ids)).all()
+def calculate_team_synergy(req: SynergyRequest, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    candidates = db.query(models.Candidate).filter(
+        models.Candidate.id.in_(req.candidate_ids),
+        models.Candidate.user_id == current_user.id
+    ).all()
+    if len(candidates) < len(req.candidate_ids):
+        raise HTTPException(status_code=403, detail="Unauthorized access to one or more candidates")
     if len(candidates) < 2:
         return {"error": "Need at least 2 candidates"}
         

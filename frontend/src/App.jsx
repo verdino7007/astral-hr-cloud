@@ -4,10 +4,28 @@ import { ShieldAlert, Terminal, Eye, Sparkles, X, Heart, ExternalLink, ChevronRi
 import NewAnalysis from './pages/NewAnalysis';
 import CandidateVault from './pages/CandidateVault';
 import TeamMatcher from './pages/TeamMatcher';
+import Login from './pages/Login';
 import { playKeySound, playReturnSound } from './utils/typewriterSound';
 
 function AppContent() {
+  const [token, setToken] = useState(localStorage.getItem('astral_hr_token') || '');
+  const [username, setUsername] = useState(localStorage.getItem('astral_hr_username') || '');
   const [showDonate, setShowDonate] = useState(false);
+
+  const handleLoginSuccess = (userToken, userNm) => {
+    localStorage.setItem('astral_hr_token', userToken);
+    localStorage.setItem('astral_hr_username', userNm);
+    setToken(userToken);
+    setUsername(userNm);
+  };
+
+  const handleLogout = () => {
+    playReturnSound();
+    localStorage.removeItem('astral_hr_token');
+    localStorage.removeItem('astral_hr_username');
+    setToken('');
+    setUsername('');
+  };
 
   const handleOpenDonate = () => {
     playReturnSound();
@@ -19,6 +37,10 @@ function AppContent() {
     setShowDonate(false);
   };
 
+  if (!token) {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col text-cia-dark relative font-typewriter">
       {/* Background Layers */}
@@ -27,7 +49,7 @@ function AppContent() {
 
       {/* Top Secret Header Stamp */}
       <div className="w-full bg-cia-dark text-cia-bg text-center py-2.5 text-xs font-bold tracking-[0.3em] uppercase relative z-50">
-        // UNCLASSIFIED // SUBJECT PROFILE INTELLIGENCE // RECORD FILE
+        // SECURE CONSOLE // OPERATIVE: {username.toUpperCase()} // PROFILE SYSTEM
       </div>
 
       {/* Header */}
@@ -72,8 +94,15 @@ function AppContent() {
               </NavLink>
             </nav>
             
-            {/* Empty block to balance layout on desktop */}
-            <div className="hidden md:block w-[140px]"></div>
+            {/* Operative Info & Revoke Access */}
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={handleLogout} 
+                className="px-3 py-1.5 border border-cia-red text-cia-red hover:bg-cia-red hover:text-cia-bg text-[10px] font-bold transition-all font-stamp uppercase"
+              >
+                REVOKE ACCESS
+              </button>
+            </div>
 
           </div>
         </div>
@@ -82,9 +111,9 @@ function AppContent() {
       {/* Main Content */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-6 lg:px-12 py-12 lg:py-16 relative z-10">
         <Routes>
-          <Route path="/" element={<NewAnalysis />} />
-          <Route path="/vault" element={<CandidateVault />} />
-          <Route path="/matcher" element={<TeamMatcher />} />
+          <Route path="/" element={<NewAnalysis token={token} />} />
+          <Route path="/vault" element={<CandidateVault token={token} />} />
+          <Route path="/matcher" element={<TeamMatcher token={token} />} />
         </Routes>
       </main>
 

@@ -12,7 +12,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { playKeySound, playBellSound, playReturnSound } from '../utils/typewriterSound';
 
-function NewAnalysis() {
+function NewAnalysis({ token }) {
   const [step, setStep] = useState('welcome'); // welcome, input, results
   const [inputType, setInputType] = useState('manual'); // manual, csv
   const [candidateData, setCandidateData] = useState({
@@ -38,7 +38,10 @@ function NewAnalysis() {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
       const response = await fetch(`${apiUrl}/analyze`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(candidateData),
       });
       const data = await response.json();
@@ -83,7 +86,10 @@ function NewAnalysis() {
              try {
                 await fetch(`${apiUrl}/analyze`, {
                   method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
+                  headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  },
                   body: JSON.stringify({name, birth_date: date, birth_time: time}),
                 });
                 successCount++;

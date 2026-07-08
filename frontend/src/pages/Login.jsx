@@ -1,0 +1,157 @@
+import React, { useState } from 'react';
+import { ShieldAlert, Key, UserPlus, LogIn, Loader } from 'lucide-react';
+import { playKeySound, playReturnSound } from '../utils/typewriterSound';
+
+function Login({ onLoginSuccess }) {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    playReturnSound();
+    if (!username || !password) {
+      setError('Credentials cannot be empty.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
+      const endpoint = isSignUp ? '/auth/signup' : '/auth/login';
+      const res = await fetch(`${apiUrl}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        onLoginSuccess(data.token, data.username);
+      } else {
+        setError(data.detail || 'Authentication failure.');
+      }
+    } catch (err) {
+      setError('Connection to security server failed.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-cia-bg font-typewriter flex items-center justify-center p-4">
+      <div className="card max-w-md w-full bg-cia-card border-3 border-cia-dark shadow-cia-card p-8 relative slant-right">
+        {/* Classified Stamp */}
+        <div className="absolute -top-6 -left-4 stamp stamp-classified text-[11px] font-black rotate-[-6deg] bg-cia-card z-20">
+          SECURE TERMINAL
+        </div>
+        <div className="absolute top-4 right-4 stamp stamp-restricted text-[9px] font-black rotate-[3deg] bg-cia-card">
+          [ RESTRICTED ]
+        </div>
+
+        {/* Header */}
+        <div className="text-center mb-8 mt-2">
+          <div className="inline-flex items-center justify-center p-3 border-2 border-cia-dark bg-cia-bg mb-4">
+            <Key className="w-6 h-6 text-cia-dark animate-pulse" />
+          </div>
+          <h2 className="text-lg font-black text-cia-dark tracking-widest font-stamp uppercase leading-none">
+            ASTRAL-HR GATEWAY
+          </h2>
+          <p className="text-[9px] text-cia-muted font-bold uppercase mt-2">
+            Central Intelligence Agency Archives Portal
+          </p>
+          <div className="border-t-2 border-double border-cia-dark my-4"></div>
+        </div>
+
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-6 p-4 border border-cia-red bg-cia-bg text-cia-red text-xs font-bold flex items-center gap-3">
+            <ShieldAlert className="w-4 h-4 shrink-0" />
+            <span className="uppercase">{error}</span>
+          </div>
+        )}
+
+        {/* Authentication Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-[10px] font-bold text-cia-dark uppercase mb-1.5">
+              CLEARANCE ID / USERNAME:
+            </label>
+            <input
+              type="text"
+              className="w-full glass-input"
+              placeholder="e.g. AGENT_007"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              onKeyDown={playKeySound}
+              disabled={loading}
+              autoComplete="username"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-bold text-cia-dark uppercase mb-1.5">
+              SECRET PASSCODE / PASSWORD:
+            </label>
+            <input
+              type="password"
+              className="w-full glass-input"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={playKeySound}
+              disabled={loading}
+              autoComplete="current-password"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full btn-primary py-3 flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : isSignUp ? (
+              <>
+                <UserPlus className="w-4 h-4" />
+                <span>REQUEST CLEARANCE (SIGN UP)</span>
+              </>
+            ) : (
+              <>
+                <LogIn className="w-4 h-4" />
+                <span>VALIDATE CREDENTIALS (SIGN IN)</span>
+              </>
+            )}
+          </button>
+        </form>
+
+        {/* Auth Toggle */}
+        <div className="mt-8 pt-6 border-t border-dashed border-cia-dark/30 text-center">
+          <p className="text-[10px] text-cia-muted font-bold uppercase">
+            {isSignUp ? "Already hold an active clearance?" : "New operative demanding terminal access?"}
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              playReturnSound();
+              setIsSignUp(!isSignUp);
+              setError('');
+            }}
+            className="mt-2 text-xs font-bold text-cia-red hover:underline uppercase"
+            disabled={loading}
+          >
+            {isSignUp ? "→ Switch to Archive Sign In" : "→ Request New operative Clearance"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Login;

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Loader, Target, ShieldAlert, Shield } from 'lucide-react';
 import { playKeySound, playReturnSound, playBellSound } from '../utils/typewriterSound';
 
-function TeamMatcher() {
+function TeamMatcher({ token }) {
   const [candidates, setCandidates] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +12,9 @@ function TeamMatcher() {
 
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
-    fetch(`${apiUrl}/candidates`)
+    fetch(`${apiUrl}/candidates`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
       .then(res => res.json())
       .then(data => {
         setCandidates(data);
@@ -22,7 +24,7 @@ function TeamMatcher() {
         console.error(err);
         setLoading(false);
       });
-  }, []);
+  }, [token]);
 
   const toggleSelect = (id) => {
     playReturnSound();
@@ -41,7 +43,10 @@ function TeamMatcher() {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
       const res = await fetch(`${apiUrl}/synergy`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ candidate_ids: selectedIds })
       });
       const data = await res.json();
