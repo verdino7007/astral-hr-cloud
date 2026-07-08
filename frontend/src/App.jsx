@@ -5,12 +5,14 @@ import NewAnalysis from './pages/NewAnalysis';
 import CandidateVault from './pages/CandidateVault';
 import TeamMatcher from './pages/TeamMatcher';
 import Login from './pages/Login';
+import Landing from './pages/Landing';
 import { playKeySound, playReturnSound } from './utils/typewriterSound';
 
 function AppContent() {
   const [token, setToken] = useState(localStorage.getItem('astral_hr_token') || '');
   const [username, setUsername] = useState(localStorage.getItem('astral_hr_username') || '');
   const [showDonate, setShowDonate] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   const handleLoginSuccess = (userToken, userNm) => {
     localStorage.setItem('astral_hr_token', userToken);
@@ -25,6 +27,7 @@ function AppContent() {
     localStorage.removeItem('astral_hr_username');
     setToken('');
     setUsername('');
+    setShowLogin(false);
   };
 
   const handleOpenDonate = () => {
@@ -38,7 +41,10 @@ function AppContent() {
   };
 
   if (!token) {
-    return <Login onLoginSuccess={handleLoginSuccess} />;
+    if (!showLogin) {
+      return <Landing onStart={() => setShowLogin(true)} />;
+    }
+    return <Login onLoginSuccess={handleLoginSuccess} onCancel={() => setShowLogin(false)} />;
   }
 
   return (

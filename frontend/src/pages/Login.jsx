@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ShieldAlert, Key, UserPlus, LogIn, Loader } from 'lucide-react';
 import { playKeySound, playReturnSound } from '../utils/typewriterSound';
 
-function Login({ onLoginSuccess }) {
+function Login({ onLoginSuccess, onCancel }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -175,7 +175,7 @@ function Login({ onLoginSuccess }) {
         </form>
 
         {/* Auth Toggle */}
-        <div className="mt-8 pt-6 border-t border-dashed border-cia-dark/30 text-center">
+        <div className="mt-8 pt-6 border-t border-dashed border-cia-dark/30 text-center space-y-3">
           <p className="text-[10px] text-cia-muted font-bold uppercase">
             {isSignUp ? "Already hold an active clearance?" : "New operative demanding terminal access?"}
           </p>
@@ -189,11 +189,24 @@ function Login({ onLoginSuccess }) {
               setPassword('');
               setPwStatus('empty');
             }}
-            className="mt-2 text-xs font-bold text-cia-red hover:underline uppercase"
+            className="mt-2 text-xs font-bold text-cia-red hover:underline uppercase block mx-auto"
             disabled={loading}
           >
             {isSignUp ? "→ Switch to Archive Sign In" : "→ Request New operative Clearance"}
           </button>
+          {onCancel && (
+            <button
+              type="button"
+              onClick={() => {
+                playReturnSound();
+                onCancel();
+              }}
+              className="text-[10px] font-bold text-cia-muted hover:text-cia-dark uppercase block mx-auto pt-2 hover:underline"
+              disabled={loading}
+            >
+              ← Cancel & Return to Front Page
+            </button>
+          )}
         </div>
       </div>
     </div>
