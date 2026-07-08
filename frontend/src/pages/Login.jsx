@@ -9,12 +9,14 @@ function Login({ onLoginSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [pwStatus, setPwStatus] = useState('empty'); // empty, typing, correct, incorrect
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     playReturnSound();
     if (!username || !password) {
       setError('Credentials cannot be empty.');
+      setPwStatus('incorrect');
       return;
     }
 
@@ -36,15 +38,21 @@ function Login({ onLoginSuccess }) {
         if (isSignUp) {
           setSuccessMessage('Clearance approved. Operative credentials recorded. Please sign in below.');
           setPassword('');
+          setPwStatus('empty');
           setIsSignUp(false);
         } else {
-          onLoginSuccess(data.token, data.username);
+          setPwStatus('correct');
+          setTimeout(() => {
+            onLoginSuccess(data.token, data.username);
+          }, 300); // Small delay to let the green LED shine!
         }
       } else {
         setError(data.detail || 'Authentication failure.');
+        setPwStatus('incorrect');
       }
     } catch (err) {
       setError('Connection to security server failed.');
+      setPwStatus('incorrect');
       console.error(err);
     } finally {
       setLoading(false);
@@ -114,16 +122,35 @@ function Login({ onLoginSuccess }) {
             <label className="block text-[10px] font-bold text-cia-dark uppercase mb-1.5">
               SECRET PASSCODE / PASSWORD:
             </label>
-            <input
-              type="password"
-              className="w-full glass-input"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={playKeySound}
-              disabled={loading}
-              autoComplete="current-password"
-            />
+            <div className="flex items-center gap-3">
+              <input
+                type="password"
+                className="w-full glass-input"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (e.target.value === '') {
+                    setPwStatus('empty');
+                  } else {
+                    setPwStatus('typing');
+                  }
+                }}
+                onKeyDown={playKeySound}
+                disabled={loading}
+                autoComplete="current-password"
+              />
+              {/* LED Status Light */}
+              <div 
+                className={`w-4 h-4 rounded-full border-2 border-cia-dark shrink-0 transition-all duration-300 ${
+                  pwStatus === 'correct' ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' :
+                  pwStatus === 'incorrect' ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' :
+                  pwStatus === 'typing' ? 'bg-yellow-500 shadow-[0_0_8px_#eab308]' :
+                  'bg-gray-300'
+                }`}
+                title={`Passcode Status: ${pwStatus.toUpperCase()}`}
+              />
+            </div>
           </div>
 
           <button
@@ -159,6 +186,8 @@ function Login({ onLoginSuccess }) {
               setIsSignUp(!isSignUp);
               setError('');
               setSuccessMessage('');
+              setPassword('');
+              setPwStatus('empty');
             }}
             className="mt-2 text-xs font-bold text-cia-red hover:underline uppercase"
             disabled={loading}

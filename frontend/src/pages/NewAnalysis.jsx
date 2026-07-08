@@ -13,7 +13,7 @@ import jsPDF from 'jspdf';
 import { playKeySound, playBellSound, playReturnSound } from '../utils/typewriterSound';
 
 function NewAnalysis({ token }) {
-  const [step, setStep] = useState('welcome'); // welcome, input, results
+  const [step, setStep] = useState('input'); // welcome, input, results
   const [inputType, setInputType] = useState('manual'); // manual, csv
   const [candidateData, setCandidateData] = useState({
     name: '',
