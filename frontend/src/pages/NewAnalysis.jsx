@@ -128,6 +128,54 @@ function NewAnalysis() {
     fullMark: 50,
   }));
 
+  // Normalize BaZi results for backward compatibility
+  const getBaziData = () => {
+    if (!analysisResult?.results?.bazi) return null;
+    const rawBazi = analysisResult.results.bazi;
+    
+    // Normalize Day Master
+    let normalizedDm = { character: '?', pinyin: '', element: '', polarity: '', translation: '', symbol: '', meaning: '' };
+    if (typeof rawBazi.day_master === 'object' && rawBazi.day_master !== null) {
+      normalizedDm = { ...normalizedDm, ...rawBazi.day_master };
+    } else if (typeof rawBazi.day_master === 'string') {
+      normalizedDm.character = rawBazi.day_master;
+      normalizedDm.translation = `Element: ${rawBazi.day_master}`;
+    }
+    
+    // Normalize Pillars
+    const normalizedPillars = {};
+    const keys = ['year', 'month', 'day', 'time'];
+    keys.forEach((key) => {
+      const p = rawBazi.pillars?.[key];
+      if (typeof p === 'object' && p !== null) {
+        normalizedPillars[key] = p;
+      } else if (typeof p === 'string') {
+        // Fallback for old string format like "甲子"
+        const stemChar = p.charAt(0) || '?';
+        const branchChar = p.charAt(1) || '?';
+        normalizedPillars[key] = {
+          character: p,
+          stem: { character: stemChar, pinyin: '', element: '', polarity: '', translation: '', symbol: '', meaning: '' },
+          branch: { character: branchChar, pinyin: '', zodiac: '', element: '', meaning: '' }
+        };
+      } else {
+        normalizedPillars[key] = {
+          character: '??',
+          stem: { character: '?', pinyin: '', element: '', polarity: '', translation: '', symbol: '', meaning: '' },
+          branch: { character: '?', pinyin: '', zodiac: '', element: '', meaning: '' }
+        };
+      }
+    });
+    
+    return {
+      ...rawBazi,
+      day_master: normalizedDm,
+      pillars: normalizedPillars
+    };
+  };
+
+  const baziData = getBaziData();
+
   const containerVariants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
   const itemVariants = { hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 200, damping: 20 } } };
 
@@ -461,21 +509,21 @@ function NewAnalysis() {
                               <div className="flex flex-col sm:flex-row gap-6 items-center">
                                 <div className="w-20 h-20 border-3 border-cia-dark bg-cia-card flex flex-col items-center justify-center rotate-[-3deg] shrink-0 shadow-cia-btn">
                                   <span className="text-4xl font-stamp font-black text-cia-red leading-none mt-1">
-                                    {analysisResult.results.bazi.day_master.character}
+                                    {baziData.day_master.character}
                                   </span>
                                   <span className="text-xs font-bold text-cia-dark leading-none mt-1">
-                                    {analysisResult.results.bazi.day_master.pinyin}
+                                    {baziData.day_master.pinyin}
                                   </span>
                                 </div>
                                 <div>
                                   <h4 className="text-sm font-black text-cia-dark uppercase font-stamp">
-                                    CORE ELEMENT: {analysisResult.results.bazi.day_master.translation}
+                                    CORE ELEMENT: {baziData.day_master.translation}
                                   </h4>
                                   <p className="text-[10px] text-cia-muted font-bold uppercase mt-1">
-                                    SYMBOL: {analysisResult.results.bazi.day_master.symbol}
+                                    SYMBOL: {baziData.day_master.symbol}
                                   </p>
                                   <p className="text-xs text-cia-dark mt-3 leading-relaxed font-semibold">
-                                    {analysisResult.results.bazi.day_master.meaning}
+                                    {baziData.day_master.meaning}
                                   </p>
                                 </div>
                               </div>
@@ -488,7 +536,7 @@ function NewAnalysis() {
                               </h4>
                               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {['year', 'month', 'day', 'time'].map((key) => {
-                                  const pillar = analysisResult.results.bazi.pillars[key];
+                                  const pillar = baziData.pillars[key];
                                   if (!pillar) return null;
                                   return (
                                     <div key={key} className="card p-6 bg-cia-card border-2 border-cia-dark shadow-cia-card relative text-center flex flex-col justify-between">
@@ -533,7 +581,7 @@ function NewAnalysis() {
                                   <div className="absolute -top-3 right-4 px-2 py-0.5 border border-cia-dark bg-cia-bg text-[8px] font-bold uppercase tracking-wider">traits</div>
                                   <h4 className="text-xs font-bold tracking-wider text-cia-dark uppercase mb-6 flex items-center gap-2"><Hexagon className="w-4 h-4 text-cia-dark"/> PSYCHO-ENERGY VECTORS</h4>
                                   <div className="flex flex-wrap gap-2">
-                                    {analysisResult.results.bazi.traits.map((t, i) => (
+                                    {baziData.traits.map((t, i) => (
                                       <span key={i} className="px-3 py-1.5 border border-cia-dark bg-cia-bg text-xs font-bold text-cia-dark">{t}</span>
                                     ))}
                                   </div>
@@ -543,7 +591,7 @@ function NewAnalysis() {
                                   <div className="absolute -top-3 right-4 px-2 py-0.5 border border-cia-dark bg-cia-bg text-[8px] font-bold uppercase tracking-wider">placement</div>
                                   <h4 className="text-xs font-bold tracking-wider text-cia-dark uppercase mb-6 flex items-center gap-2"><Briefcase className="w-4 h-4 text-cia-dark"/> RECOMMENDED DEPLOYMENT</h4>
                                   <ul className="space-y-2">
-                                    {analysisResult.results.bazi.best_roles.map((r, i) => (
+                                    {baziData.best_roles.map((r, i) => (
                                       <li key={i} className="flex items-center gap-3 bg-cia-bg border border-cia-dark/30 p-3 rounded-none text-xs font-bold text-cia-dark">
                                         <div className="w-2 h-2 bg-cia-dark shrink-0"></div>{r}
                                       </li>
