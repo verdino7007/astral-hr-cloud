@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Database, Trash2, Edit2, Loader, Save, X, Sparkles } from 'lucide-react';
+import { Database, Trash2, Edit2, Loader, Save, X, ShieldAlert } from 'lucide-react';
 
 function CandidateVault() {
   const [candidates, setCandidates] = useState([]);
@@ -26,7 +26,7 @@ function CandidateVault() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus kandidat ini?')) return;
+    if (!confirm('Apakah Anda yakin ingin menghapus arsip file kandidat ini?')) return;
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
       await fetch(`${apiUrl}/candidates/${id}`, { method: 'DELETE' });
@@ -59,68 +59,68 @@ function CandidateVault() {
   };
 
   return (
-    <div className="w-full font-montserrat relative">
-      {/* Decorative floating sphere */}
-      <div className="absolute -top-10 -right-6 w-20 h-20 rounded-full bg-gradient-to-br from-white to-clay-peach border-2 border-white shadow-clay-card z-0 flex items-center justify-center floating-medium">
-        <Sparkles className="w-8 h-8 text-clay-orange" />
+    <div className="w-full font-typewriter relative">
+      {/* Decorative Stamp */}
+      <div className="absolute -top-10 -right-6 stamp stamp-classified text-sm font-black rotate-12 bg-cia-card">
+        RESTRICTED ARCHIVES
       </div>
 
       {/* Page Header */}
       <div className="mb-12 text-center md:text-left relative z-10">
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border-2 border-white text-clay-orange-dark text-xs font-extrabold tracking-wider mb-6 shadow-clay-card floating-slow">
-          <Database className="w-4 h-4 text-clay-orange" />
-          DATABASE REPOSITORY
+        <div className="inline-flex items-center gap-2 px-4 py-2 border-2 border-cia-dark bg-cia-card text-cia-dark text-xs font-bold mb-6">
+          <Database className="w-4 h-4 text-cia-dark" />
+          RECORD INGESTION DIRECTORY
         </div>
-        <h2 className="text-4xl lg:text-5xl font-black text-clay-dark tracking-tight leading-tight">
-          Candidate Vault
+        <h2 className="text-3xl lg:text-5xl font-black text-cia-dark tracking-tight leading-tight uppercase font-stamp">
+          Subject Archives Vault
         </h2>
-        <p className="text-clay-muted mt-5 text-[15px] leading-relaxed max-w-2xl font-semibold">
-          Kelola semua data profil esoterik kandidat yang tersimpan di database local Anda.
+        <div className="accent-bar max-w-lg my-4"></div>
+        <p className="text-cia-muted mt-5 text-sm leading-relaxed max-w-2xl font-bold uppercase">
+          DIRECTORY OF REGISTERED PROFILE FILES AND COGNITIVE METRICS RECORDED WITHIN PROJECT ASTRAL-HR.
         </p>
       </div>
 
-      {/* Main Table Container (Slanted Polaroid-style card) */}
-      <div className="card overflow-hidden shadow-clay-card relative z-10 slant-left slant-hover">
-        {/* Floating sticker label */}
-        <div className="absolute -top-3.5 left-8 px-4 py-1.5 bg-gradient-to-r from-clay-orange to-clay-orange-dark text-white text-[10px] font-black rounded-full shadow-clay-btn tracking-widest uppercase">
-          📂 Archive
+      {/* Main Table Container (Dossier Sheet style) */}
+      <div className="card overflow-hidden shadow-cia-card relative z-10 slant-left slant-hover bg-cia-card border-3 border-cia-dark p-6 lg:p-8">
+        <div className="absolute top-4 right-6 text-[10px] font-bold text-cia-red uppercase font-stamp border-2 border-cia-red px-2 py-0.5 rotate-[-2deg]">
+          Secret File
         </div>
 
         {loading ? (
           <div className="p-20 flex justify-center items-center">
-            <Loader className="w-8 h-8 animate-spin text-clay-orange" />
+            <Loader className="w-6 h-6 animate-spin text-cia-dark" />
           </div>
         ) : (
-          <div className="overflow-x-auto mt-2">
+          <div className="overflow-x-auto mt-4">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-clay-bg/75 border-b border-clay-peach/40 text-[10px] font-extrabold tracking-wider uppercase text-clay-muted">
-                  <th className="p-6">ID</th>
-                  <th className="p-6">Nama</th>
-                  <th className="p-6">Tanggal Lahir</th>
-                  <th className="p-6">Waktu Lahir</th>
-                  <th className="p-6">Skor Sinergi</th>
-                  <th className="p-6 text-right">Aksi</th>
+                <tr className="bg-cia-bg border-b-2 border-cia-dark text-[10px] font-bold tracking-wider uppercase text-cia-muted">
+                  <th className="p-4 border-r border-cia-dark/20">RECORD ID</th>
+                  <th className="p-4 border-r border-cia-dark/20">SUBJECT NAME</th>
+                  <th className="p-4 border-r border-cia-dark/20">BIRTH DATE (FILE)</th>
+                  <th className="p-4 border-r border-cia-dark/20">BIRTH TIME</th>
+                  <th className="p-4 border-r border-cia-dark/20">METRIC SCORE</th>
+                  <th className="p-4 text-right">ACTIONS</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-clay-peach/20">
+              <tbody className="divide-y divide-cia-dark/25">
                 {candidates.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="p-12 text-center text-clay-muted font-bold">
-                      Belum ada kandidat tersimpan.
+                    <td colSpan="6" className="p-12 text-center text-cia-muted font-bold uppercase">
+                      NO REGISTERED COGNITIVE DOSSIERS FOUND IN THE ARCHIVE DATABASE.
                     </td>
                   </tr>
                 ) : (
                   candidates.map((c) => (
-                    <tr key={c.id} className="hover:bg-clay-bg/30 transition-colors">
-                      <td className="p-6 text-clay-muted font-mono text-xs font-bold">#{c.id}</td>
+                    <tr key={c.id} className="hover:bg-cia-bg transition-colors font-bold text-xs">
+                      <td className="p-4 border-r border-cia-dark/10 text-cia-muted font-mono font-bold">#CIA-{c.id}</td>
                       
                       {/* Name */}
-                      <td className="p-6 font-extrabold text-clay-dark text-sm">
+                      <td className="p-4 border-r border-cia-dark/10 text-cia-dark uppercase">
                         {editingId === c.id ? (
                           <input
                             type="text"
-                            className="w-full px-3 py-2 glass-input"
+                            className="w-full glass-input text-xs"
                             value={editForm.name}
                             onChange={e => setEditForm({...editForm, name: e.target.value})}
                           />
@@ -128,11 +128,11 @@ function CandidateVault() {
                       </td>
 
                       {/* Birth Date */}
-                      <td className="p-6 text-clay-muted text-sm font-bold">
+                      <td className="p-4 border-r border-cia-dark/10 text-cia-muted">
                         {editingId === c.id ? (
                           <input
                             type="date"
-                            className="w-full px-3 py-2 glass-input"
+                            className="w-full glass-input text-xs"
                             value={editForm.birth_date}
                             onChange={e => setEditForm({...editForm, birth_date: e.target.value})}
                           />
@@ -140,11 +140,11 @@ function CandidateVault() {
                       </td>
 
                       {/* Birth Time */}
-                      <td className="p-6 text-clay-muted text-sm font-mono font-bold">
+                      <td className="p-4 border-r border-cia-dark/10 text-cia-muted font-mono">
                         {editingId === c.id ? (
                           <input
                             type="time"
-                            className="w-full px-3 py-2 glass-input"
+                            className="w-full glass-input text-xs"
                             value={editForm.birth_time}
                             onChange={e => setEditForm({...editForm, birth_time: e.target.value})}
                           />
@@ -152,46 +152,46 @@ function CandidateVault() {
                       </td>
 
                       {/* Score Badge */}
-                      <td className="p-6">
-                        <span className="px-4 py-1.5 bg-clay-peach/40 border border-clay-peach/60 text-clay-orange-dark rounded-xl text-xs font-extrabold shadow-inner">
+                      <td className="p-4 border-r border-cia-dark/10">
+                        <span className="px-2.5 py-1 border border-cia-dark bg-cia-bg text-cia-dark rounded-none font-bold shadow-inner">
                           {c.overall_score}
                         </span>
                       </td>
 
                       {/* Actions */}
-                      <td className="p-6 text-right">
+                      <td className="p-4 text-right">
                         {editingId === c.id ? (
-                          <div className="flex justify-end gap-2.5">
+                          <div className="flex justify-end gap-2">
                             <button
                               onClick={handleSaveEdit}
-                              className="p-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl border border-emerald-200/40 shadow-inner transition-all"
-                              title="Simpan"
+                              className="p-2 border border-cia-dark bg-cia-dark text-cia-bg transition-colors"
+                              title="Commit Save"
                             >
-                              <Save className="w-4 h-4" />
+                              <Save className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => setEditingId(null)}
-                              className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl border border-rose-200/40 shadow-inner transition-all"
-                              title="Batal"
+                              className="p-2 border border-cia-dark bg-cia-card text-cia-dark transition-colors"
+                              title="Discard"
                             >
-                              <X className="w-4 h-4" />
+                              <X className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         ) : (
-                          <div className="flex justify-end gap-2.5">
+                          <div className="flex justify-end gap-2">
                             <button
                               onClick={() => startEdit(c)}
-                              className="p-2.5 btn-secondary rounded-xl text-clay-orange shadow-clay-btn-secondary hover:text-clay-orange-dark transition-all"
-                              title="Edit"
+                              className="p-2 border border-cia-dark bg-cia-card text-cia-orange hover:bg-cia-dark hover:text-cia-bg transition-colors"
+                              title="Edit Record"
                             >
-                              <Edit2 className="w-4 h-4" />
+                              <Edit2 className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleDelete(c.id)}
-                              className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl border border-rose-200/40 shadow-inner transition-all"
-                              title="Hapus"
+                              className="p-2 border border-cia-red bg-cia-card text-cia-red hover:bg-cia-red hover:text-cia-bg transition-colors"
+                              title="Expunge File"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         )}

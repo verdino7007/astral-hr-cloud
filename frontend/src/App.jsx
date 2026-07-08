@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { Sparkles, Activity, Database, Users, X, Heart, ExternalLink, ChevronRight } from 'lucide-react';
+import { ShieldAlert, Terminal, Eye, Sparkles, X, Heart, ExternalLink, ChevronRight } from 'lucide-react';
 import NewAnalysis from './pages/NewAnalysis';
 import CandidateVault from './pages/CandidateVault';
 import TeamMatcher from './pages/TeamMatcher';
@@ -9,74 +9,66 @@ function AppContent() {
   const [showDonate, setShowDonate] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col text-clay-dark relative font-montserrat">
+    <div className="min-h-screen flex flex-col text-cia-dark relative font-typewriter">
       {/* Background Layers */}
       <div className="scene-bg"></div>
       <div className="scene-grid"></div>
-      <div className="orb orb-1"></div>
-      <div className="orb orb-2"></div>
-      <div className="orb orb-3"></div>
+
+      {/* Top Secret Header Stamp */}
+      <div className="w-full bg-cia-dark text-cia-bg text-center py-2.5 text-xs font-bold tracking-[0.3em] uppercase relative z-50">
+        // UNCLASSIFIED // SUBJECT PROFILE INTELLIGENCE // RECORD FILE
+      </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/70 border-b border-clay-peach/40">
+      <header className="sticky top-0 z-50 w-full bg-cia-bg border-b-4 border-double border-cia-dark">
         <div className="max-w-6xl mx-auto px-6 lg:px-12">
-          <div className="h-20 flex items-center justify-between">
+          <div className="h-24 flex flex-col md:flex-row items-center justify-between py-4 md:py-0 gap-4">
             
-            {/* Logo */}
-            <NavLink to="/" className="flex items-center gap-3 group shrink-0">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-white to-clay-peach flex items-center justify-center shadow-clay-card border-2 border-white transition-transform group-hover:scale-105">
-                <Sparkles className="w-5 h-5 text-clay-orange" />
+            {/* Logo (Dossier Stamp style) */}
+            <NavLink to="/" className="flex items-center gap-3 shrink-0">
+              <div className="border-3 border-cia-dark px-3 py-1.5 font-stamp text-xl font-black rotate-[-2deg] bg-cia-card stamp stamp-secret tracking-tighter">
+                CIA-HR
               </div>
               <div className="hidden sm:block">
-                <span className="text-xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-clay-orange-dark to-clay-orange" style={{fontFamily: "'Montserrat', sans-serif"}}>
-                  ASTRAL HR
+                <span className="text-sm font-black tracking-widest text-cia-dark">
+                  DOSSIER SYSTEM
                 </span>
-                <p className="text-[9px] text-clay-muted font-bold uppercase tracking-[0.25em] -mt-0.5">Intelligence Platform</p>
+                <p className="text-[9px] text-cia-muted font-bold uppercase tracking-[0.2em] -mt-0.5">Project: Astral-HR</p>
               </div>
             </NavLink>
 
-            {/* Navigation */}
-            <nav className="flex items-center gap-2 px-2.5 py-2 rounded-[24px] bg-clay-peach/50 border border-white/80 shadow-inner">
+            {/* Navigation (Index card style tabs) */}
+            <nav className="flex items-center gap-1.5 p-1 bg-cia-dark/5 border-2 border-cia-dark rounded">
               <NavLink to="/" end className={({ isActive }) =>
-                `flex items-center gap-2 px-5 py-2.5 rounded-[20px] text-xs font-bold tracking-wide transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-clay-orange-light to-clay-orange text-white shadow-clay-btn border border-white/20' : 'text-clay-muted hover:text-clay-dark'}`
+                `flex items-center gap-2 px-4 py-2 text-xs font-bold tracking-wide transition-all border ${isActive ? 'bg-cia-dark text-cia-bg border-cia-dark shadow-none' : 'bg-cia-card text-cia-dark border-transparent hover:border-cia-dark'}`
               }>
-                <Activity className="w-4 h-4" />
-                <span>New Analysis</span>
+                <Terminal className="w-4 h-4" />
+                <span>New Dossier</span>
               </NavLink>
 
               <NavLink to="/vault" className={({ isActive }) =>
-                `flex items-center gap-2 px-5 py-2.5 rounded-[20px] text-xs font-bold tracking-wide transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-clay-orange-light to-clay-orange text-white shadow-clay-btn border border-white/20' : 'text-clay-muted hover:text-clay-dark'}`
+                `flex items-center gap-2 px-4 py-2 text-xs font-bold tracking-wide transition-all border ${isActive ? 'bg-cia-dark text-cia-bg border-cia-dark shadow-none' : 'bg-cia-card text-cia-dark border-transparent hover:border-cia-dark'}`
               }>
-                <Database className="w-4 h-4" />
+                <Terminal className="w-4 h-4" />
                 <span>Candidate Vault</span>
               </NavLink>
 
               <NavLink to="/matcher" className={({ isActive }) =>
-                `flex items-center gap-2 px-5 py-2.5 rounded-[20px] text-xs font-bold tracking-wide transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-clay-orange-light to-clay-orange text-white shadow-clay-btn border border-white/20' : 'text-clay-muted hover:text-clay-dark'}`
+                `flex items-center gap-2 px-4 py-2 text-xs font-bold tracking-wide transition-all border ${isActive ? 'bg-cia-dark text-cia-bg border-cia-dark shadow-none' : 'bg-cia-card text-cia-dark border-transparent hover:border-cia-dark'}`
               }>
-                <Users className="w-4 h-4" />
-                <span>Team Synergy</span>
+                <Terminal className="w-4 h-4" />
+                <span>Team Matcher</span>
               </NavLink>
             </nav>
 
-            {/* Right side */}
+            {/* Support Actions */}
             <div className="flex items-center gap-4 shrink-0">
-              <a
-                href="https://vrrobo-lp.vercel.app/#portfolio"
-                target="_blank"
-                rel="noreferrer"
-                className="hidden lg:flex items-center gap-2 text-xs font-bold tracking-wider text-clay-muted hover:text-clay-orange transition-colors"
-              >
-                VRROBO2025
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-
               <button
                 onClick={() => setShowDonate(true)}
-                className="px-5 py-3 rounded-full text-xs font-bold btn-primary"
+                className="px-4 py-2.5 btn-secondary text-xs font-bold flex items-center gap-2"
               >
                 <Heart className="w-3.5 h-3.5 fill-current" />
-                Support
+                Support / Donate
               </button>
             </div>
           </div>
@@ -93,69 +85,80 @@ function AppContent() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-clay-peach/40 mt-auto relative z-20 bg-white/40 backdrop-blur-md">
+      <footer className="w-full border-t-4 border-cia-dark mt-auto relative z-20 bg-cia-bg">
         <div className="max-w-6xl mx-auto px-6 lg:px-12 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
           
           {/* Branding */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-white border border-clay-peach flex items-center justify-center shadow-clay-card">
-              <Sparkles className="w-3.5 h-3.5 text-clay-orange" />
+            <div className="border-2 border-cia-dark px-2.5 py-1 font-stamp text-xs bg-cia-card rotate-1">
+              SECRET
             </div>
             <div>
-              <p className="text-xs text-clay-dark font-bold">© 2025 Astral HR Intelligence</p>
-              <p className="text-[10px] text-clay-muted font-medium">Powered by BaZi · Primbon · Falakiyah</p>
+              <p className="text-xs text-cia-dark font-bold">© 1965 Astral HR Dossier</p>
+              <p className="text-[10px] text-cia-muted font-bold">Classified Intelligence System · Weton/BaZi/Falakiyah</p>
             </div>
           </div>
 
           {/* Links */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
             <a
               href="https://vrrobo-lp.vercel.app/#portfolio"
               target="_blank"
               rel="noreferrer"
-              className="group flex items-center gap-2 text-xs font-bold tracking-wider text-clay-muted hover:text-clay-dark transition-colors"
+              className="flex items-center gap-2 text-xs font-bold tracking-wider text-cia-muted hover:text-cia-dark transition-colors"
             >
               VRROBO2025
-              <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
-            <div className="w-px h-4 bg-clay-peach"></div>
+            <div className="w-px h-4 bg-cia-dark/30"></div>
             <button
               onClick={() => setShowDonate(true)}
-              className="group flex items-center gap-2 text-xs font-bold tracking-wider text-clay-muted hover:text-clay-orange transition-colors"
+              className="flex items-center gap-2 text-xs font-bold tracking-wider text-cia-muted hover:text-cia-dark transition-colors"
             >
-              <Heart className="w-3.5 h-3.5 fill-current" />
-              Support / Donate
-              <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              GoPay Donate
             </button>
           </div>
         </div>
       </footer>
 
-      {/* Donate Modal */}
+      {/* Classified Donate Modal */}
       {showDonate && (
-        <div className="fixed inset-0 bg-clay-dark/30 backdrop-blur-md z-50 flex items-center justify-center p-6" onClick={() => setShowDonate(false)}>
-          <div className="w-full max-w-md bg-white border-2 border-white rounded-[32px] shadow-clay-card relative overflow-hidden" onClick={e => e.stopPropagation()}>
-            <div className="h-2 w-full bg-gradient-to-r from-clay-orange-light via-clay-peach to-clay-orange"></div>
-            <div className="p-10">
-              <button onClick={() => setShowDonate(false)} className="absolute top-4 right-4 text-clay-muted hover:text-clay-dark transition-colors p-2 rounded-xl hover:bg-clay-bg">
+        <div className="fixed inset-0 bg-cia-dark/45 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={() => setShowDonate(false)}>
+          <div className="w-full max-w-md bg-cia-card border-[3px] border-cia-dark shadow-cia-card relative overflow-hidden" onClick={e => e.stopPropagation()}>
+            {/* Top warning line */}
+            <div className="bg-cia-red text-white text-center py-2 text-[10px] font-bold tracking-[0.2em] uppercase">
+              ⚠️ RESTRICTED ACCESS // LEVEL 3 CLEARANCE REQUIRED
+            </div>
+            
+            <div className="p-8">
+              <button onClick={() => setShowDonate(false)} className="absolute top-12 right-6 text-cia-muted hover:text-cia-dark transition-colors p-1.5 border border-transparent hover:border-cia-dark">
                 <X className="w-4 h-4" />
               </button>
+              
               <div className="text-center space-y-6">
-                <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-white to-clay-peach flex items-center justify-center shadow-clay-card border-2 border-white">
-                  <Heart className="w-8 h-8 text-clay-orange fill-current" />
+                <div className="stamp stamp-classified text-xl font-black tracking-widest mx-auto block w-fit">
+                  CONFIDENTIAL
                 </div>
+                
                 <div>
-                  <h3 className="text-2xl font-black text-clay-dark">Dukung Kami!</h3>
-                  <p className="text-clay-muted text-sm mt-2 max-w-xs mx-auto leading-relaxed">
-                    Aplikasi ini disediakan gratis. Jika Anda merasa terbantu, silakan dukung pengembangan kami via GoPay.
+                  <h3 className="text-lg font-black text-cia-dark">SUPPORT MISSION FUND</h3>
+                  <p className="text-cia-muted text-xs mt-2 max-w-xs mx-auto leading-relaxed font-semibold">
+                    Operasional sistem ini dibiayai mandiri. Salurkan dana bantuan operasional via nomor di bawah.
                   </p>
                 </div>
-                <div className="bg-clay-bg border border-clay-peach/50 p-6 rounded-2xl">
-                  <p className="text-clay-orange-dark font-mono text-2xl tracking-widest font-extrabold">08121105212</p>
-                  <p className="text-[10px] text-clay-muted mt-2 uppercase tracking-widest font-bold">GoPay / QRIS</p>
+                
+                <div className="bg-cia-bg border-2 border-cia-dark p-6 relative">
+                  <div className="absolute -top-3 left-4 px-2 bg-cia-card text-[9px] font-black uppercase text-cia-red">GoPay Account</div>
+                  {/* Click to reveal or copy GoPay */}
+                  <p className="text-cia-red font-bold text-2xl tracking-widest font-mono">08121105212</p>
+                  <p className="text-[9px] text-cia-muted mt-2 font-bold uppercase tracking-widest">Click below to copy target details</p>
                 </div>
-                <button onClick={() => { navigator.clipboard.writeText('08121105212'); alert('Nomor GoPay disalin!'); }} className="w-full py-4 bg-gradient-to-r from-clay-orange-light to-clay-orange text-white font-bold rounded-full transition-all shadow-clay-btn">
-                  SALIN NOMOR
+                
+                <button 
+                  onClick={() => { navigator.clipboard.writeText('08121105212'); alert('GoPay details copied successfully.'); }} 
+                  className="w-full py-3.5 btn-primary font-black text-xs"
+                >
+                  COPY DOSSIER NUMBER
                 </button>
               </div>
             </div>

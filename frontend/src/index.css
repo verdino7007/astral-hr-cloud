@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
-   ASTRAL HR — Premium 3D Claymorphism Design System v6
-   Inspired by claymorphic soft-orange design with Montserrat font
+   ASTRAL HR — Vintage CIA Classified Dossier Design System
+   Inspired by 1960s typewriter documents, folders, and stamps
    ═══════════════════════════════════════════════════════════ */
 
 @tailwind base;
@@ -10,274 +10,223 @@
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; }
 
-:root {
-  --bg-base: #fdf6ee;
-  --bg-card: #ffffff;
-  --text-main: #2d2d2d;
-  --text-muted: #666666;
-  --text-light: #999999;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   margin: 0;
-  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg-base);
-  color: var(--text-main);
+  font-family: 'Courier Prime', Courier, monospace;
+  background-color: #f4f2eb; /* Dossier paper color */
+  color: #0f0f0f; /* Heavy carbon ink black */
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.8;
-  letter-spacing: -0.01em;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif;
-  letter-spacing: -0.02em;
-  color: var(--text-main);
-  line-height: 1.35;
-  font-weight: 800;
+  font-family: 'Special Elite', cursive, monospace;
+  color: #0f0f0f;
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: -0.01em;
 }
 
-/* ── Floating 3D Clay Spheres Background ── */
+/* ── Vintage CIA Dossier Background Grid ── */
 .scene-bg {
   position: fixed;
   inset: 0;
   z-index: -10;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 50%, #fffbf8 0%, #faeae0 100%);
+  background-color: #f4f2eb;
 }
 
 .scene-grid {
   position: fixed;
   inset: 0;
   z-index: -9;
+  /* Retro micro-grid for drafting paper style */
   background-image:
-    linear-gradient(rgba(255, 154, 98, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 154, 98, 0.03) 1px, transparent 1px);
-  background-size: 80px 80px;
-  mask-image: radial-gradient(circle at 50% 50%, black 50%, transparent 95%);
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 50%, transparent 95%);
+    linear-gradient(rgba(15, 15, 15, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 15, 15, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-/* 3D clay spheres with radial shading */
-.orb {
-  position: fixed;
-  border-radius: 50%;
-  z-index: -5;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.orb-1 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ffe8db 35%, #ffa673 80%, #e06c2b 100%);
-  top: -200px; left: -150px;
-  filter: blur(5px);
-  opacity: 0.85;
-  box-shadow: 0 40px 80px -20px rgba(224, 108, 43, 0.15);
-  animation: orb-drift 45s infinite ease-in-out alternate;
-}
-
-.orb-2 {
-  width: 450px; height: 450px;
-  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #fbf3ee 40%, #e8d0c2 80%, #caa48e 100%);
-  bottom: -200px; right: -150px;
-  filter: blur(5px);
-  opacity: 0.8;
-  box-shadow: 0 40px 80px -20px rgba(202, 164, 142, 0.15);
-  animation: orb-drift 40s infinite ease-in-out alternate-reverse;
-}
-
-.orb-3 {
-  width: 250px; height: 250px;
-  background: radial-gradient(circle at 30% 30%, #ffffff 0%, #fff0e7 35%, #ffb68d 80%, #f6894c 100%);
-  top: 45%; left: 55%;
-  filter: blur(8px);
-  opacity: 0.65;
-  box-shadow: 0 30px 60px -15px rgba(246, 137, 76, 0.12);
-  animation: orb-drift 35s infinite ease-in-out alternate;
-  animation-delay: -10s;
-}
-
-@keyframes orb-drift {
-  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
-  50%  { transform: translate(60px, -40px) scale(1.08) rotate(180deg); }
-  100% { transform: translate(-40px, 50px) scale(0.95) rotate(360deg); }
-}
-
-/* ── Premium Claymorphism Card ── */
+/* ── Dossier Index Card (CIA Card) ── */
 .card {
-  background: var(--bg-card);
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  border-radius: 32px;
+  background-color: #faf8f2; /* Index card white */
+  border: 3px solid #0f0f0f; /* Heavy ink border */
+  border-radius: 4px; /* Crisp corners like sheets */
   position: relative;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 
-    0 20px 45px -10px rgba(255, 154, 98, 0.1),
-    0 8px 20px -6px rgba(255, 154, 98, 0.05),
-    inset 0 3px 6px rgba(255, 255, 255, 0.95);
+  transition: all 0.25s steps(4);
+  box-shadow: 4px 4px 0px 0px #0f0f0f;
 }
 
 .card:hover {
-  transform: translateY(-6px) scale(1.01);
-  border-color: #ffffff;
-  box-shadow: 
-    0 35px 60px -15px rgba(255, 154, 98, 0.18),
-    0 15px 30px -8px rgba(255, 154, 98, 0.08),
-    inset 0 3px 6px rgba(255, 255, 255, 0.95);
+  transform: translateY(-4px) translateX(-4px);
+  box-shadow: 8px 8px 0px 0px #0f0f0f;
 }
 
-/* ── Layered & slanting classes for 3D layout feel ── */
-.layer-depth-1 {
-  transform: translateZ(10px);
-}
-.layer-depth-2 {
-  transform: translateZ(20px);
-}
-
+/* ── Layered & slanting classes for vintage hand-stamped folder feel ── */
 .slant-left {
-  transform: rotate(-1.5deg);
+  transform: rotate(-1deg);
 }
 .slant-right {
-  transform: rotate(1.5deg);
+  transform: rotate(1deg);
 }
 .slant-hover {
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.25s steps(3);
 }
 .slant-hover:hover {
-  transform: rotate(0deg) translateY(-4px) scale(1.02);
+  transform: rotate(0deg) translateY(-2px);
 }
 
-/* ── Floating elements animation ── */
+/* ── Floating elements (Subtle typewriter carriage shake) ── */
 .floating-slow {
-  animation: float-slow 6s infinite ease-in-out;
+  animation: carriage-shake 8s infinite alternate ease-in-out;
 }
 .floating-medium {
-  animation: float-medium 4s infinite ease-in-out;
+  animation: carriage-shake 5s infinite alternate ease-in-out;
 }
 
-@keyframes float-slow {
-  0% { transform: translateY(0px) rotate(-1.5deg); }
-  50% { transform: translateY(-10px) rotate(0.5deg); }
-  100% { transform: translateY(0px) rotate(-1.5deg); }
+@keyframes carriage-shake {
+  0% { transform: translateY(0px) rotate(-0.5deg); }
+  50% { transform: translateY(-2px) rotate(0.5deg); }
+  100% { transform: translateY(0px) rotate(-0.5deg); }
 }
 
-@keyframes float-medium {
-  0% { transform: translateY(0px) rotate(1.5deg); }
-  50% { transform: translateY(-8px) rotate(-0.5deg); }
-  100% { transform: translateY(0px) rotate(1.5deg); }
-}
-
-/* ── Inputs ── */
+/* ── Typewriter Form Fields ── */
 .glass-input {
-  background: #ffffff;
-  border: 2.5px solid #faeae0;
-  color: var(--text-main);
-  border-radius: 20px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
+  background-color: #faf8f2;
+  border-bottom: 3px solid #0f0f0f;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  color: #0f0f0f;
+  border-radius: 0px;
+  transition: background-color 0.2s ease;
+  font-family: 'Courier Prime', Courier, monospace;
+  font-weight: 700;
   font-size: 14px;
-  box-shadow: inset 0 2px 5px rgba(255, 154, 98, 0.03), 0 2px 4px rgba(255, 255, 255, 0.8);
+  padding: 8px 4px;
 }
 
 .glass-input:focus {
   outline: none;
-  border-color: #ff9a62;
-  box-shadow: 0 0 0 4px rgba(255, 154, 98, 0.15), inset 0 2px 5px rgba(255, 154, 98, 0.03);
-  background: #ffffff;
+  background-color: #fdfdfc;
+  border-bottom-color: #9e1b1b; /* Red pencil edit highlight */
 }
 
 .glass-input::placeholder {
-  color: #999999;
-  font-weight: 500;
+  color: #8a8a8a;
+  font-style: italic;
+  font-weight: 400;
 }
 
-/* ── Custom 3D Claymorphic Buttons ── */
+/* ── CIA Vintage Stenciled Buttons ── */
 .btn-primary {
-  background: linear-gradient(135deg, #ffb38a 0%, #ff9a62 100%);
-  color: #ffffff;
-  font-weight: 800;
-  font-family: 'Montserrat', sans-serif;
-  letter-spacing: 0.05em;
-  border-radius: 9999px;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 
-    0 12px 28px -5px rgba(255, 154, 98, 0.4),
-    inset 0 -5px 10px rgba(0, 0, 0, 0.15),
-    inset 0 4px 10px rgba(255, 255, 255, 0.45);
+  background-color: #0f0f0f;
+  color: #faf8f2;
+  font-weight: 700;
+  font-family: 'Courier Prime', Courier, monospace;
+  border-radius: 4px;
+  border: 3px solid #0f0f0f;
+  transition: all 0.2s steps(3);
+  box-shadow: 3px 3px 0px 0px #8a8a8a;
 }
 
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 
-    0 18px 35px -5px rgba(255, 154, 98, 0.5),
-    inset 0 -5px 10px rgba(0, 0, 0, 0.15),
-    inset 0 4px 10px rgba(255, 255, 255, 0.5);
+  background-color: #faf8f2;
+  color: #0f0f0f;
+  transform: translateY(-2px) translateX(-2px);
+  box-shadow: 5px 5px 0px 0px #0f0f0f;
 }
 
 .btn-primary:active:not(:disabled) {
-  transform: translateY(0) scale(1);
-  box-shadow: 
-    0 6px 15px -3px rgba(255, 154, 98, 0.45),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.15),
-    inset 0 3px 6px rgba(255, 255, 255, 0.4);
+  transform: translateY(1px) translateX(1px);
+  box-shadow: 1px 1px 0px 0px #0f0f0f;
 }
 
 .btn-secondary {
-  background: #ffffff;
-  color: #e06c2b;
-  font-weight: 800;
-  font-family: 'Montserrat', sans-serif;
-  letter-spacing: 0.05em;
-  border-radius: 9999px;
-  border: 2.5px solid #faeae0;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 
-    0 10px 25px -5px rgba(224, 182, 155, 0.25),
-    inset 0 -4px 8px rgba(0, 0, 0, 0.03),
-    inset 0 4px 8px rgba(255, 255, 255, 0.95);
+  background-color: #faf8f2;
+  color: #0f0f0f;
+  font-weight: 700;
+  font-family: 'Courier Prime', Courier, monospace;
+  border-radius: 4px;
+  border: 3px solid #0f0f0f;
+  transition: all 0.2s steps(3);
+  box-shadow: 2px 2px 0px 0px #0f0f0f;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.03);
-  border-color: #ff9a62;
-  box-shadow: 
-    0 15px 30px -5px rgba(255, 154, 98, 0.18),
-    inset 0 -4px 8px rgba(0, 0, 0, 0.05),
-    inset 0 4px 8px rgba(255, 255, 255, 0.95);
+  background-color: #0f0f0f;
+  color: #faf8f2;
+  transform: translateY(-2px) translateX(-2px);
+  box-shadow: 4px 4px 0px 0px #0f0f0f;
+}
+
+/* ── Vintage Ink Stamp Markings ── */
+.stamp {
+  font-family: 'Special Elite', cursive, monospace;
+  text-transform: uppercase;
+  border: 3px solid currentColor;
+  padding: 4px 10px;
+  display: inline-block;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  transform: rotate(-3deg);
+  border-radius: 2px;
+}
+
+.stamp-classified {
+  color: #9e1b1b;
+  border-color: #9e1b1b;
+}
+
+.stamp-secret {
+  color: #0f0f0f;
+  border-color: #0f0f0f;
+  transform: rotate(2deg);
+}
+
+/* ── CIA Redaction Effect ── */
+.redacted {
+  background-color: #0f0f0f;
+  color: #0f0f0f !important;
+  user-select: none;
+  transition: background-color 0.2s, color 0.2s;
+  padding: 0px 3px;
+  cursor: pointer;
+}
+.redacted:hover {
+  background-color: transparent;
+  color: inherit !important;
+  user-select: auto;
 }
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 154, 98, 0.15); border-radius: 100px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 154, 98, 0.3); }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #faf8f2; border-left: 3px solid #0f0f0f; }
+::-webkit-scrollbar-thumb { background: #0f0f0f; border: 2px solid #faf8f2; }
 
 /* ── Synthesis Prose ── */
 .synthesis-prose strong {
-  color: #e06c2b;
-  font-weight: 800;
+  color: #0f0f0f;
+  text-decoration: underline;
+  text-decoration-style: double;
 }
 .synthesis-prose p {
   margin-bottom: 1.5rem;
+  text-indent: 2rem; /* Indented paragraphs like typed letters */
 }
 
-/* ── Accent Bar ── */
+/* ── Vintage Typing Line Divider ── */
 .accent-bar {
-  height: 5px;
-  border-radius: 5px;
-  background: linear-gradient(90deg, #ffccb0, #ff9a62, #faeae0, #e06c2b);
+  height: 3px;
+  background-color: #0f0f0f;
+  background-image: repeating-linear-gradient(90deg, #0f0f0f, #0f0f0f 6px, transparent 6px, transparent 12px);
 }
 
 /* ── Focus ── */
 *:focus-visible {
-  outline: 2px solid #ff9a62;
-  outline-offset: 2px;
+  outline: 3px dashed #9e1b1b;
+  outline-offset: 3px;
 }

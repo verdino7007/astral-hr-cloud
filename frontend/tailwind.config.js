@@ -7,34 +7,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        clay: {
-          bg: "#fdf6ee",
-          peach: "#faeae0",
-          orange: {
-            light: "#ffccb0",
-            DEFAULT: "#ff9a62",
-            dark: "#e06c2b",
-          },
-          dark: "#2d2d2d",
-          muted: "#666666",
-          card: "#ffffff",
+        cia: {
+          bg: "#f4f2eb",      // Vintage typewritten paper
+          card: "#faf8f2",     // Typed index card paper
+          dark: "#0f0f0f",     // Heavy typewriter ink black
+          muted: "#4e4e4e",    // Faded carbon ribbon gray
+          red: "#9e1b1b",      // Red classified stamp ink
+          border: "#1c1c1c",   // Vintage stencil lines
         }
       },
       fontFamily: {
-        montserrat: ["Montserrat", "sans-serif"],
-        cinzel: ["Cinzel", "serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        typewriter: ["'Courier Prime'", "Courier", "monospace"],
+        stamp: ["'Special Elite'", "cursive"],
+        mono: ["'Courier Prime'", "monospace"],
       },
       boxShadow: {
-        // Claymorphism shadows (soft spread, soft colors, with white highlights)
-        'clay-card': '0 20px 40px -10px rgba(255, 154, 98, 0.15), 0 8px 16px -4px rgba(255, 154, 98, 0.05), inset 0 2px 4px rgba(255, 255, 255, 0.9)',
-        'clay-card-hover': '0 30px 50px -10px rgba(255, 154, 98, 0.22), 0 12px 24px -4px rgba(255, 154, 98, 0.08), inset 0 2px 4px rgba(255, 255, 255, 0.9)',
-        'clay-btn': '0 10px 25px -5px rgba(255, 154, 98, 0.4), inset 0 -4px 8px rgba(0, 0, 0, 0.1), inset 0 4px 8px rgba(255, 255, 255, 0.4)',
-        'clay-btn-hover': '0 15px 30px -5px rgba(255, 154, 98, 0.5), inset 0 -4px 8px rgba(0, 0, 0, 0.15), inset 0 4px 8px rgba(255, 255, 255, 0.5)',
-        'clay-btn-secondary': '0 10px 25px -5px rgba(224, 182, 155, 0.3), inset 0 -4px 8px rgba(0, 0, 0, 0.05), inset 0 4px 8px rgba(255, 255, 255, 0.8)',
-        'clay-btn-secondary-hover': '0 15px 30px -5px rgba(224, 182, 155, 0.4), inset 0 -4px 8px rgba(0, 0, 0, 0.08), inset 0 4px 8px rgba(255, 255, 255, 0.8)',
-        'clay-input': 'inset 0 2px 6px rgba(255, 154, 98, 0.05), 0 2px 4px rgba(255, 255, 255, 0.8)',
-        'clay-input-focus': '0 0 0 4px rgba(255, 154, 98, 0.2), inset 0 2px 6px rgba(255, 154, 98, 0.05)',
+        // 60s solid block/shadow overlays
+        'cia-card': '4px 4px 0px 0px #0f0f0f',
+        'cia-card-hover': '8px 8px 0px 0px #0f0f0f',
+        'cia-btn': '3px 3px 0px 0px #0f0f0f',
+        'cia-btn-hover': '5px 5px 0px 0px #0f0f0f',
+        'cia-input': 'inset 2px 2px 0px 0px rgba(0, 0, 0, 0.1)',
       }
     },
   },
