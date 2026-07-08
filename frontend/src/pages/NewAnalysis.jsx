@@ -451,40 +451,120 @@ function NewAnalysis() {
 
                         {/* BaZi Tab */}
                         {activeTab === 'bazi' && (
-                          <motion.div key="tab-bazi" initial={{opacity: 0, y: 5}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-5}} className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                            <div className="space-y-8">
-                              <div className="card p-6 bg-cia-card border-2 border-cia-dark shadow-cia-card slant-left slant-hover relative">
-                                <div className="absolute -top-3 right-4 px-2 py-0.5 border border-cia-dark bg-cia-bg text-[8px] font-bold uppercase tracking-wider">traits</div>
-                                <h4 className="text-xs font-bold tracking-wider text-cia-dark uppercase mb-6 flex items-center gap-2"><Hexagon className="w-4 h-4 text-cia-dark"/> PSYCHO-ENERGY VECTORS</h4>
-                                <div className="flex flex-wrap gap-2">
-                                  {analysisResult.results.bazi.traits.map((t, i) => (
-                                    <span key={i} className="px-3 py-1.5 border border-cia-dark bg-cia-bg text-xs font-bold text-cia-dark">{t}</span>
-                                  ))}
+                          <motion.div key="tab-bazi" initial={{opacity: 0, y: 5}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-5}} className="flex flex-col gap-10 w-full">
+                            
+                            {/* Day Master (Self) Header */}
+                            <div className="card p-6 bg-cia-bg border-2 border-cia-dark shadow-cia-card relative">
+                              <div className="absolute top-4 right-4 stamp stamp-classified text-[10px] font-black">
+                                DAY MASTER (SELF)
+                              </div>
+                              <div className="flex flex-col sm:flex-row gap-6 items-center">
+                                <div className="w-20 h-20 border-3 border-cia-dark bg-cia-card flex flex-col items-center justify-center rotate-[-3deg] shrink-0 shadow-cia-btn">
+                                  <span className="text-4xl font-stamp font-black text-cia-red leading-none mt-1">
+                                    {analysisResult.results.bazi.day_master.character}
+                                  </span>
+                                  <span className="text-xs font-bold text-cia-dark leading-none mt-1">
+                                    {analysisResult.results.bazi.day_master.pinyin}
+                                  </span>
+                                </div>
+                                <div>
+                                  <h4 className="text-sm font-black text-cia-dark uppercase font-stamp">
+                                    CORE ELEMENT: {analysisResult.results.bazi.day_master.translation}
+                                  </h4>
+                                  <p className="text-[10px] text-cia-muted font-bold uppercase mt-1">
+                                    SYMBOL: {analysisResult.results.bazi.day_master.symbol}
+                                  </p>
+                                  <p className="text-xs text-cia-dark mt-3 leading-relaxed font-semibold">
+                                    {analysisResult.results.bazi.day_master.meaning}
+                                  </p>
                                 </div>
                               </div>
-                              <div className="card p-6 bg-cia-card border-2 border-cia-dark shadow-cia-card slant-right slant-hover relative">
-                                <div className="absolute -top-3 right-4 px-2 py-0.5 border border-cia-dark bg-cia-bg text-[8px] font-bold uppercase tracking-wider">placement</div>
-                                <h4 className="text-xs font-bold tracking-wider text-cia-dark uppercase mb-6 flex items-center gap-2"><Briefcase className="w-4 h-4 text-cia-dark"/> RECOMMENDED DEPLOYMENT</h4>
-                                <ul className="space-y-2">
-                                  {analysisResult.results.bazi.best_roles.map((r, i) => (
-                                    <li key={i} className="flex items-center gap-3.5 bg-cia-bg border border-cia-dark/30 p-3 rounded-none text-xs font-bold text-cia-dark">
-                                      <div className="w-2 h-2 bg-cia-dark shrink-0"></div>{r}
-                                    </li>
-                                  ))}
-                                </ul>
+                            </div>
+
+                            {/* 4 Pillars of Destiny */}
+                            <div>
+                              <h4 className="text-xs font-bold tracking-wider text-cia-dark uppercase mb-6 flex items-center gap-2 font-stamp">
+                                <Terminal className="w-4 h-4 text-cia-dark"/> THE FOUR PILLARS OF DESTINY (八字 - BAZI)
+                              </h4>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                {['year', 'month', 'day', 'time'].map((key) => {
+                                  const pillar = analysisResult.results.bazi.pillars[key];
+                                  if (!pillar) return null;
+                                  return (
+                                    <div key={key} className="card p-6 bg-cia-card border-2 border-cia-dark shadow-cia-card relative text-center flex flex-col justify-between">
+                                      <div className="text-[9px] font-bold text-cia-muted uppercase border-b border-cia-dark/30 pb-2 mb-4">
+                                        {key} pillar
+                                      </div>
+                                      
+                                      {/* Heavenly Stem */}
+                                      <div className="mb-4">
+                                        <span className="text-[8px] text-cia-muted font-bold block uppercase mb-1">Heavenly Stem</span>
+                                        <span className="text-4xl font-stamp font-black text-cia-red block">{pillar.stem.character}</span>
+                                        <span className="text-xs font-bold text-cia-dark block">{pillar.stem.pinyin}</span>
+                                        <span className="text-[9px] text-cia-muted font-bold block uppercase">{pillar.stem.translation}</span>
+                                        <p className="text-[10px] text-cia-dark mt-3 border-t border-dashed border-cia-dark/20 pt-3 leading-relaxed font-semibold">
+                                          {pillar.stem.meaning}
+                                        </p>
+                                      </div>
+                                      
+                                      <div className="border-t-2 border-double border-cia-dark my-4"></div>
+                                      
+                                      {/* Earthly Branch */}
+                                      <div>
+                                        <span className="text-[8px] text-cia-muted font-bold block uppercase mb-1">Earthly Branch</span>
+                                        <span className="text-4xl font-stamp font-black text-cia-dark block">{pillar.branch.character}</span>
+                                        <span className="text-xs font-bold text-cia-dark block">{pillar.branch.pinyin}</span>
+                                        <span className="text-[9px] text-cia-muted font-bold block uppercase">{pillar.branch.zodiac} ({pillar.branch.element})</span>
+                                        <p className="text-[10px] text-cia-dark mt-3 border-t border-dashed border-cia-dark/20 pt-3 leading-relaxed font-semibold">
+                                          {pillar.branch.meaning}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
                               </div>
                             </div>
-                            <div className="flex flex-col items-center bg-cia-bg border-2 border-cia-dark p-6 rounded-none shadow-cia-card slant-right slant-hover relative">
-                              <h4 className="text-xs font-bold tracking-wider text-cia-dark uppercase mt-2 mb-1 font-stamp">ELEMENT CHART RECORD</h4>
-                              <p className="text-cia-muted text-[10px] mb-6 font-bold uppercase">DAY MASTER VECTOR: {analysisResult.results.bazi.day_master}</p>
-                              <div className="w-full h-64">
-                                <ResponsiveContainer width="100%" height="100%">
-                                  <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                                    <PolarGrid stroke="#0f0f0f" strokeWidth={1} />
-                                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#0f0f0f', fontSize: 11, fontWeight: 'bold' }} />
-                                    <Radar dataKey="Value" stroke="#0f0f0f" strokeWidth={2.5} fill="rgba(15, 15, 15, 0.1)" />
-                                  </RadarChart>
-                                </ResponsiveContainer>
+
+                            {/* Traits, Roles, and Element Distribution Chart */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
+                              {/* Left side: Traits and Roles */}
+                              <div className="space-y-8 flex flex-col justify-between">
+                                <div className="card p-6 bg-cia-card border-2 border-cia-dark shadow-cia-card relative">
+                                  <div className="absolute -top-3 right-4 px-2 py-0.5 border border-cia-dark bg-cia-bg text-[8px] font-bold uppercase tracking-wider">traits</div>
+                                  <h4 className="text-xs font-bold tracking-wider text-cia-dark uppercase mb-6 flex items-center gap-2"><Hexagon className="w-4 h-4 text-cia-dark"/> PSYCHO-ENERGY VECTORS</h4>
+                                  <div className="flex flex-wrap gap-2">
+                                    {analysisResult.results.bazi.traits.map((t, i) => (
+                                      <span key={i} className="px-3 py-1.5 border border-cia-dark bg-cia-bg text-xs font-bold text-cia-dark">{t}</span>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                <div className="card p-6 bg-cia-card border-2 border-cia-dark shadow-cia-card relative flex-1 mt-4">
+                                  <div className="absolute -top-3 right-4 px-2 py-0.5 border border-cia-dark bg-cia-bg text-[8px] font-bold uppercase tracking-wider">placement</div>
+                                  <h4 className="text-xs font-bold tracking-wider text-cia-dark uppercase mb-6 flex items-center gap-2"><Briefcase className="w-4 h-4 text-cia-dark"/> RECOMMENDED DEPLOYMENT</h4>
+                                  <ul className="space-y-2">
+                                    {analysisResult.results.bazi.best_roles.map((r, i) => (
+                                      <li key={i} className="flex items-center gap-3 bg-cia-bg border border-cia-dark/30 p-3 rounded-none text-xs font-bold text-cia-dark">
+                                        <div className="w-2 h-2 bg-cia-dark shrink-0"></div>{r}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+
+                              {/* Right side: Radar Chart */}
+                              <div className="flex flex-col items-center bg-cia-bg border-2 border-cia-dark p-6 rounded-none shadow-cia-card relative">
+                                <h4 className="text-xs font-bold tracking-wider text-cia-dark uppercase mt-2 mb-1 font-stamp">ELEMENT CHART RECORD</h4>
+                                <p className="text-cia-muted text-[10px] mb-6 font-bold uppercase">DAY MASTER ELEMENT STRENGTH</p>
+                                <div className="w-full h-64">
+                                  <ResponsiveContainer width="100%" height="100%">
+                                    <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+                                      <PolarGrid stroke="#0f0f0f" strokeWidth={1} />
+                                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#0f0f0f', fontSize: 11, fontWeight: 'bold' }} />
+                                      <Radar dataKey="Value" stroke="#0f0f0f" strokeWidth={2.5} fill="rgba(15, 15, 15, 0.1)" />
+                                    </RadarChart>
+                                  </ResponsiveContainer>
+                                </div>
                               </div>
                             </div>
                           </motion.div>

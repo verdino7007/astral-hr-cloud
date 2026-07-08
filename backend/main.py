@@ -42,34 +42,44 @@ class CandidateUpdate(BaseModel):
     birth_time: str = "12:00"
 
 def synthesize_analysis(bazi, primbon, falakiyah):
-    bazi_day_master = bazi.get("day_master", "")
+    bazi_dm = bazi.get("day_master", "")
+    dm_char = ""
+    dm_element = ""
+    if isinstance(bazi_dm, dict):
+        dm_char = bazi_dm.get("character", "")
+        dm_element = bazi_dm.get("element", "")
+        bazi_day_master = f"'{dm_char}' ({bazi_dm.get('pinyin', '')} - {bazi_dm.get('translation', '')})"
+    else:
+        dm_char = str(bazi_dm)
+        bazi_day_master = dm_char
+        
     primbon_char = primbon.get("character", "")
     falakiyah_element = falakiyah.get("numerology", {}).get("element", "")
     
     # Paragraf 1: Core Identity (BaZi x Falakiyah)
     p1 = f"**Core Identity & Cosmic Drive**\nKandidat ini membawa perpaduan energi bawaan {bazi_day_master} (BaZi) yang berjalan beriringan dengan vibrasi alamiah {falakiyah_element} (Falakiyah). "
-    if "Api" in falakiyah_element or "Fire" in bazi_day_master:
+    if "Api" in falakiyah_element or dm_element == "Fire" or "Fire" in dm_char:
         p1 += "Kombinasi ini melahirkan profil individu dengan dorongan eksekusi yang meledak-ledak dan antusiasme tinggi. Mereka cenderung menjadi inisiator yang berani mengambil risiko dan mampu memanaskan semangat tim di sekitarnya."
-    elif "Air" in falakiyah_element or "Water" in bazi_day_master:
+    elif "Air" in falakiyah_element or dm_element == "Water" or "Water" in dm_char:
         p1 += "Konfigurasi ini membentuk kepribadian yang sangat mengalir, empatik, dan memiliki kedalaman intuisi. Layaknya air yang mampu menyesuaikan diri dengan wadahnya, individu ini memiliki resiliensi tinggi dalam menghadapi perubahan lingkungan."
-    elif "Udara" in falakiyah_element or "Metal" in bazi_day_master:
+    elif "Udara" in falakiyah_element or dm_element == "Metal" or "Metal" in dm_char:
         p1 += "Karakteristik ini menajamkan kemampuan analitis, komunikasi strategis, dan kebebasan berpikir. Individu ini cenderung mengandalkan logika yang tajam dan visi jangka panjang, menjadikannya perencana yang visioner."
-    elif "Tanah" in falakiyah_element or "Earth" in bazi_day_master:
+    elif "Tanah" in falakiyah_element or dm_element == "Earth" or "Earth" in dm_char:
         p1 += "Pola ini membumikan karakter mereka menjadi sosok yang sangat rasional, stabil, dan berorientasi pada hasil nyata (material). Stabilitas dan loyalitas adalah pilar utama dari fondasi psikologis mereka."
     else:
         p1 += "Interaksi kedua energi ini menciptakan ekuilibrium yang unik, di mana logika dan intuisi bekerja secara bergantian merespons tantangan."
-
+    
     # Paragraf 2: Destiny & Work Style (Primbon)
     p2 = f"**Manifestation of Destiny**\nSecara siklikal menurut Primbon Jawa, pola energi tersebut mengerucut pada takdir bawaan sebagai '{primbon_char}'. "
     p2 += "Ini berarti, dorongan energi dari elemen inti tadi akan termanifestasi paling optimal ketika mereka berada dalam posisi atau peran yang sesuai dengan watak takdir tersebut. Siklus hidup mereka secara konsisten akan menarik mereka kembali pada pola kerja dan penyelesaian masalah yang mengandalkan kelebihan karakter ini."
     
     # Paragraf 3: HR Recommendations
     p3 = "**Managerial Recommendation**\nUntuk memaksimalkan potensi kandidat, HRD disarankan untuk "
-    if "Api" in falakiyah_element or "Fire" in bazi_day_master:
+    if "Api" in falakiyah_element or dm_element == "Fire" or "Fire" in dm_char:
         p3 += "memberikan mereka otonomi dalam mengeksekusi ide dan memimpin proyek jangka pendek. Hindari lingkungan yang terlalu birokratis karena dapat memadamkan semangat inovasi mereka."
-    elif "Air" in falakiyah_element or "Water" in bazi_day_master:
+    elif "Air" in falakiyah_element or dm_element == "Water" or "Water" in dm_char:
         p3 += "menempatkan mereka dalam peran yang membutuhkan mediasi, negosiasi, atau pelayanan. Mereka membutuhkan lingkungan kerja yang harmonis dan rentan terhadap gaya kepemimpinan yang terlalu konfrontatif."
-    elif "Udara" in falakiyah_element or "Metal" in bazi_day_master:
+    elif "Udara" in falakiyah_element or dm_element == "Metal" or "Metal" in dm_char:
         p3 += "melibatkan mereka dalam fase perumusan strategi dan analisis data. Mereka sangat menghargai kebebasan intelektual dan akan frustrasi jika terjebak dalam rutinitas administratif yang repetitif."
     else:
         p3 += "memercayakan mereka pada tugas-tugas yang membutuhkan ketekunan, pengelolaan aset, atau operasional jangka panjang. Berikan mereka kepastian dan metrik yang jelas, maka mereka akan menjadi tulang punggung operasional yang paling dapat diandalkan."
