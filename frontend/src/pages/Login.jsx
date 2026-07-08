@@ -8,6 +8,7 @@ function Login({ onLoginSuccess }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +20,7 @@ function Login({ onLoginSuccess }) {
 
     setLoading(true);
     setError('');
+    setSuccessMessage('');
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9091';
@@ -31,7 +33,13 @@ function Login({ onLoginSuccess }) {
 
       const data = await res.json();
       if (res.ok) {
-        onLoginSuccess(data.token, data.username);
+        if (isSignUp) {
+          setSuccessMessage('Clearance approved. Operative credentials recorded. Please sign in below.');
+          setPassword('');
+          setIsSignUp(false);
+        } else {
+          onLoginSuccess(data.token, data.username);
+        }
       } else {
         setError(data.detail || 'Authentication failure.');
       }
@@ -67,6 +75,14 @@ function Login({ onLoginSuccess }) {
           </p>
           <div className="border-t-2 border-double border-cia-dark my-4"></div>
         </div>
+
+        {/* Success Alert */}
+        {successMessage && (
+          <div className="mb-6 p-4 border border-cia-dark bg-cia-bg text-cia-dark text-xs font-bold flex items-center gap-3">
+            <div className="w-2.5 h-2.5 bg-cia-dark shrink-0"></div>
+            <span className="uppercase">{successMessage}</span>
+          </div>
+        )}
 
         {/* Error Alert */}
         {error && (
@@ -142,6 +158,7 @@ function Login({ onLoginSuccess }) {
               playReturnSound();
               setIsSignUp(!isSignUp);
               setError('');
+              setSuccessMessage('');
             }}
             className="mt-2 text-xs font-bold text-cia-red hover:underline uppercase"
             disabled={loading}
