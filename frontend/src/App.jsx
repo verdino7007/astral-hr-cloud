@@ -41,21 +41,21 @@ function AppContent() {
                 `flex items-center gap-2 px-5 py-2.5 rounded-[20px] text-xs font-bold tracking-wide transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-clay-orange-light to-clay-orange text-white shadow-clay-btn border border-white/20' : 'text-clay-muted hover:text-clay-dark'}`
               }>
                 <Activity className="w-4 h-4" />
-                <span className="hidden md:inline">New Analysis</span>
+                <span>New Analysis</span>
               </NavLink>
 
               <NavLink to="/vault" className={({ isActive }) =>
                 `flex items-center gap-2 px-5 py-2.5 rounded-[20px] text-xs font-bold tracking-wide transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-clay-orange-light to-clay-orange text-white shadow-clay-btn border border-white/20' : 'text-clay-muted hover:text-clay-dark'}`
               }>
                 <Database className="w-4 h-4" />
-                <span className="hidden md:inline">Candidate Vault</span>
+                <span>Candidate Vault</span>
               </NavLink>
 
               <NavLink to="/matcher" className={({ isActive }) =>
                 `flex items-center gap-2 px-5 py-2.5 rounded-[20px] text-xs font-bold tracking-wide transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-clay-orange-light to-clay-orange text-white shadow-clay-btn border border-white/20' : 'text-clay-muted hover:text-clay-dark'}`
               }>
                 <Users className="w-4 h-4" />
-                <span className="hidden md:inline">Team Synergy</span>
+                <span>Team Synergy</span>
               </NavLink>
             </nav>
 
