@@ -53,17 +53,17 @@ function TeamMatcher() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full font-montserrat">
       {/* Page Header */}
       <div className="mb-12">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pastel-lavender-light border border-purple-200/50 text-purple-700 text-xs font-bold tracking-wider mb-6 shadow-pastel">
-          <Users className="w-4 h-4 text-pastel-lavender-dark" />
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border-2 border-white text-clay-orange-dark text-xs font-extrabold tracking-wider mb-6 shadow-clay-card">
+          <Users className="w-4 h-4 text-clay-orange" />
           TEAM ALIGNMENT
         </div>
-        <h2 className="text-4xl lg:text-5xl font-black text-slate-800 tracking-tight leading-tight">
+        <h2 className="text-4xl lg:text-5xl font-black text-clay-dark tracking-tight leading-tight">
           Team Synergy Matcher
         </h2>
-        <p className="text-slate-600 mt-5 text-[15px] leading-relaxed max-w-2xl">
+        <p className="text-clay-muted mt-5 text-[15px] leading-relaxed max-w-2xl font-semibold">
           Pilih beberapa kandidat untuk menghitung persentase kecocokan esoterik dan sinergi dinamika kelompok mereka.
         </p>
       </div>
@@ -73,19 +73,19 @@ function TeamMatcher() {
         {/* Selection Area */}
         <div className="card p-8 lg:p-10 flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-3.5 mb-8 pb-6 border-b border-slate-200/60">
-              <div className="w-10 h-10 rounded-xl bg-pastel-lavender-light flex items-center justify-center shadow-pastel">
-                <Users className="w-5 h-5 text-purple-700" />
+            <div className="flex items-center gap-3.5 mb-8 pb-6 border-b border-clay-peach/40">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-white to-clay-peach flex items-center justify-center shadow-clay-card border-2 border-white">
+                <Users className="w-5 h-5 text-clay-orange" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-slate-800">Team Composition</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Atur anggota divisi kerja</p>
+                <h3 className="text-base font-black text-clay-dark">Team Composition</h3>
+                <p className="text-xs text-clay-muted font-bold mt-0.5">Atur anggota divisi kerja</p>
               </div>
             </div>
             
             {loading ? (
               <div className="flex justify-center p-8">
-                <Loader className="w-8 h-8 animate-spin text-pastel-lavender-dark" />
+                <Loader className="w-8 h-8 animate-spin text-clay-orange" />
               </div>
             ) : (
               <div className="flex-1 flex flex-col gap-6">
@@ -98,7 +98,7 @@ function TeamMatcher() {
                   >
                     <option value="" disabled>-- Pilih kandidat --</option>
                     {candidates.filter(c => !selectedIds.includes(c.id)).map(c => (
-                      <option key={c.id} value={c.id} className="text-slate-800 bg-white">{c.name}</option>
+                      <option key={c.id} value={c.id} className="text-clay-dark bg-white">{c.name}</option>
                     ))}
                   </select>
                   <button 
@@ -109,7 +109,7 @@ function TeamMatcher() {
                         select.value = "";
                       }
                     }}
-                    className="px-6 py-3.5 bg-pastel-lavender-light border border-purple-200 text-purple-800 font-bold rounded-xl shadow-pastel hover:bg-purple-200 transition-all text-sm shrink-0"
+                    className="px-6 py-3.5 btn-secondary text-xs font-bold shrink-0"
                   >
                     Add Member
                   </button>
@@ -117,10 +117,10 @@ function TeamMatcher() {
 
                 {/* Selected Candidates List */}
                 <div className="mt-4 flex-1">
-                  <h4 className="text-xs font-bold tracking-wider text-slate-400 uppercase mb-4">Selected Team Members ({selectedIds.length})</h4>
+                  <h4 className="text-xs font-bold tracking-wider text-clay-muted uppercase mb-4">Selected Team Members ({selectedIds.length})</h4>
                   <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
                     {selectedIds.length === 0 ? (
-                      <p className="text-slate-400 text-center py-8 bg-slate-50 rounded-2xl border border-slate-200/50 border-dashed text-sm font-semibold">
+                      <p className="text-clay-muted text-center py-8 bg-clay-bg rounded-2xl border border-clay-peach/40 border-dashed text-sm font-bold">
                         Belum ada anggota tim yang terpilih.
                       </p>
                     ) : (
@@ -128,14 +128,14 @@ function TeamMatcher() {
                         const c = candidates.find(can => can.id === id);
                         if (!c) return null;
                         return (
-                          <motion.div initial={{opacity:0, x:-20}} animate={{opacity:1, x:0}} key={id} className="flex justify-between items-center p-5 rounded-2xl bg-white border border-slate-200/80 shadow-pastel">
+                          <motion.div initial={{opacity:0, x:-20}} animate={{opacity:1, x:0}} key={id} className="flex justify-between items-center p-5 rounded-2xl bg-white border border-clay-peach/60 shadow-clay-card">
                             <div>
-                              <p className="font-extrabold text-slate-800 text-base">{c.name}</p>
-                              <p className="text-xs text-slate-400 font-semibold mt-1">ID: #{c.id}</p>
+                              <p className="font-black text-clay-dark text-base">{c.name}</p>
+                              <p className="text-xs text-clay-muted font-bold mt-1">ID: #{c.id}</p>
                             </div>
                             <button 
                               onClick={() => toggleSelect(id)}
-                              className="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-xl border border-rose-200/40 text-xs shadow-pastel transition-all"
+                              className="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-xl border border-rose-200/40 text-xs shadow-inner transition-all"
                               title="Hapus"
                             >
                               Remove
@@ -150,16 +150,16 @@ function TeamMatcher() {
             )}
           </div>
 
-          <div className="mt-8 pt-8 border-t border-slate-200/60">
+          <div className="mt-8 pt-8 border-t border-clay-peach/40">
             <button 
               disabled={selectedIds.length < 2 || calculating}
               onClick={handleCalculate}
-              className="w-full py-4 rounded-xl btn-primary shadow-pastel-pink font-bold flex justify-center items-center gap-2"
+              className="w-full py-4 rounded-full btn-primary font-black text-sm flex justify-center items-center gap-2"
             >
-              {calculating ? <Loader className="w-5 h-5 animate-spin text-rose-700" /> : <Target className="w-5 h-5 text-rose-700" />}
+              {calculating ? <Loader className="w-5 h-5 animate-spin text-white" /> : <Target className="w-5 h-5 text-white" />}
               {calculating ? 'CALCULATING SYNERGY...' : `CALCULATE SYNERGY`}
             </button>
-            {selectedIds.length < 2 && <p className="text-xs text-center text-slate-400 mt-4 font-bold uppercase tracking-wider">Pilih minimal 2 kandidat untuk mulai analisa</p>}
+            {selectedIds.length < 2 && <p className="text-xs text-center text-clay-muted mt-4 font-bold uppercase tracking-wider">Pilih minimal 2 kandidat untuk mulai analisa</p>}
           </div>
         </div>
 
@@ -168,33 +168,33 @@ function TeamMatcher() {
           <AnimatePresence mode="wait">
             {!synergyResult ? (
               <motion.div key="empty" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="text-center opacity-60">
-                <Users className="w-24 h-24 mx-auto mb-6 text-slate-300" />
-                <p className="text-base font-bold text-slate-400 uppercase tracking-widest">Menunggu Pemilihan Anggota Tim</p>
+                <Users className="w-24 h-24 mx-auto mb-6 text-clay-peach-dark" />
+                <p className="text-xs font-bold text-clay-muted uppercase tracking-widest">Menunggu Pemilihan Anggota Tim</p>
               </motion.div>
             ) : (
               <motion.div key="result" initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="text-center w-full">
                 {synergyResult.error ? (
-                  <div className="text-red-700 bg-red-50 p-8 rounded-3xl border border-red-200 shadow-pastel">
+                  <div className="text-red-700 bg-red-50 p-8 rounded-3xl border border-red-200 shadow-clay-card">
                     <AlertTriangle className="w-16 h-16 mx-auto mb-6 text-red-500" />
                     <p className="text-base font-bold leading-relaxed">{synergyResult.error}</p>
                   </div>
                 ) : (
                   <div>
-                    <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-purple-700 mb-4">Team Synergy Score</h4>
-                    <div className="text-8xl font-black text-slate-800 mb-8 drop-shadow-sm leading-none">
-                      {synergyResult.team_synergy_score}<span className="text-3xl text-slate-400 font-bold">/100</span>
+                    <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-clay-orange-dark mb-4">Team Synergy Score</h4>
+                    <div className="text-8xl font-black text-clay-dark mb-8 drop-shadow-sm leading-none">
+                      {synergyResult.team_synergy_score}<span className="text-3xl text-clay-peach-dark font-bold">/100</span>
                     </div>
                     
-                    <div className="card p-8 rounded-2xl mx-auto w-full text-left bg-gradient-to-br from-pastel-lavender-light/40 to-white border-purple-200/50">
-                       <div className="flex items-center gap-3.5 mb-6 border-b border-purple-200/30 pb-4">
+                    <div className="card p-8 rounded-2xl mx-auto w-full text-left bg-gradient-to-br from-white to-clay-peach/20 border-white">
+                       <div className="flex items-center gap-3.5 mb-6 border-b border-clay-peach/40 pb-4">
                          {synergyResult.team_synergy_score > 70 ? (
                            <ShieldCheck className="w-7 h-7 text-emerald-600" />
                          ) : (
                            <AlertTriangle className="w-7 h-7 text-amber-500" />
                          )}
-                         <span className="font-bold text-sm text-slate-700 uppercase tracking-wider">Analysis Verdict</span>
+                         <span className="font-bold text-xs text-clay-dark uppercase tracking-wider">Analysis Verdict</span>
                        </div>
-                       <p className="text-slate-600 text-sm leading-relaxed">{synergyResult.details}</p>
+                       <p className="text-clay-muted text-sm leading-relaxed font-semibold">{synergyResult.details}</p>
                     </div>
                   </div>
                 )}

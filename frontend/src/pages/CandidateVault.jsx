@@ -59,32 +59,32 @@ function CandidateVault() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full font-montserrat">
       {/* Page Header */}
       <div className="mb-12">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pastel-blue-light border border-blue-200/50 text-blue-700 text-xs font-bold tracking-wider mb-6 shadow-pastel">
-          <Database className="w-4 h-4 text-pastel-blue-dark" />
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border-2 border-white text-clay-orange-dark text-xs font-extrabold tracking-wider mb-6 shadow-clay-card">
+          <Database className="w-4 h-4 text-clay-orange" />
           DATABASE REPOSITORY
         </div>
-        <h2 className="text-4xl lg:text-5xl font-black text-slate-800 tracking-tight leading-tight">
+        <h2 className="text-4xl lg:text-5xl font-black text-clay-dark tracking-tight leading-tight">
           Candidate Vault
         </h2>
-        <p className="text-slate-600 mt-5 text-[15px] leading-relaxed max-w-2xl">
-          Kelola semua data profil esoterik kandidat yang tersimpan di database lokal Anda.
+        <p className="text-clay-muted mt-5 text-[15px] leading-relaxed max-w-2xl font-semibold">
+          Kelola semua data profil esoterik kandidat yang tersimpan di database local Anda.
         </p>
       </div>
 
       {/* Main Table Container */}
-      <div className="card overflow-hidden shadow-pastel">
+      <div className="card overflow-hidden shadow-clay-card">
         {loading ? (
           <div className="p-20 flex justify-center items-center">
-            <Loader className="w-8 h-8 animate-spin text-pastel-blue-dark" />
+            <Loader className="w-8 h-8 animate-spin text-clay-orange" />
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200/80 text-[11px] font-bold tracking-wider uppercase text-slate-500">
+                <tr className="bg-clay-bg/75 border-b border-clay-peach/40 text-[10px] font-extrabold tracking-wider uppercase text-clay-muted">
                   <th className="p-6">ID</th>
                   <th className="p-6">Nama</th>
                   <th className="p-6">Tanggal Lahir</th>
@@ -93,24 +93,24 @@ function CandidateVault() {
                   <th className="p-6 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-clay-peach/20">
                 {candidates.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="p-12 text-center text-slate-400 font-semibold">
+                    <td colSpan="6" className="p-12 text-center text-clay-muted font-bold">
                       Belum ada kandidat tersimpan.
                     </td>
                   </tr>
                 ) : (
                   candidates.map((c) => (
-                    <tr key={c.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-6 text-slate-400 font-mono text-xs">#{c.id}</td>
+                    <tr key={c.id} className="hover:bg-clay-bg/30 transition-colors">
+                      <td className="p-6 text-clay-muted font-mono text-xs font-bold">#{c.id}</td>
                       
                       {/* Name */}
-                      <td className="p-6 font-bold text-slate-800 text-sm">
+                      <td className="p-6 font-extrabold text-clay-dark text-sm">
                         {editingId === c.id ? (
                           <input
                             type="text"
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-rose-300"
+                            className="w-full px-3 py-2 glass-input"
                             value={editForm.name}
                             onChange={e => setEditForm({...editForm, name: e.target.value})}
                           />
@@ -118,11 +118,11 @@ function CandidateVault() {
                       </td>
 
                       {/* Birth Date */}
-                      <td className="p-6 text-slate-600 text-sm font-semibold">
+                      <td className="p-6 text-clay-muted text-sm font-bold">
                         {editingId === c.id ? (
                           <input
                             type="date"
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-rose-300"
+                            className="w-full px-3 py-2 glass-input"
                             value={editForm.birth_date}
                             onChange={e => setEditForm({...editForm, birth_date: e.target.value})}
                           />
@@ -130,11 +130,11 @@ function CandidateVault() {
                       </td>
 
                       {/* Birth Time */}
-                      <td className="p-6 text-slate-600 text-sm font-mono">
+                      <td className="p-6 text-clay-muted text-sm font-mono font-bold">
                         {editingId === c.id ? (
                           <input
                             type="time"
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-rose-300"
+                            className="w-full px-3 py-2 glass-input"
                             value={editForm.birth_time}
                             onChange={e => setEditForm({...editForm, birth_time: e.target.value})}
                           />
@@ -143,7 +143,7 @@ function CandidateVault() {
 
                       {/* Score Badge */}
                       <td className="p-6">
-                        <span className="px-3.5 py-1.5 bg-pastel-pink-light border border-rose-200/50 text-rose-800 rounded-full text-xs font-bold shadow-pastel">
+                        <span className="px-4 py-1.5 bg-clay-peach/40 border border-clay-peach/60 text-clay-orange-dark rounded-xl text-xs font-extrabold shadow-inner">
                           {c.overall_score}
                         </span>
                       </td>
@@ -154,14 +154,14 @@ function CandidateVault() {
                           <div className="flex justify-end gap-2.5">
                             <button
                               onClick={handleSaveEdit}
-                              className="p-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl border border-emerald-200/40 shadow-pastel transition-all"
+                              className="p-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl border border-emerald-200/40 shadow-inner transition-all"
                               title="Simpan"
                             >
                               <Save className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => setEditingId(null)}
-                              className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl border border-rose-200/40 shadow-pastel transition-all"
+                              className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl border border-rose-200/40 shadow-inner transition-all"
                               title="Batal"
                             >
                               <X className="w-4 h-4" />
@@ -171,14 +171,14 @@ function CandidateVault() {
                           <div className="flex justify-end gap-2.5">
                             <button
                               onClick={() => startEdit(c)}
-                              className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl border border-slate-200/40 shadow-pastel transition-all"
+                              className="p-2.5 btn-secondary rounded-xl text-clay-orange shadow-clay-btn-secondary hover:text-clay-orange-dark transition-all"
                               title="Edit"
                             >
                               <Edit2 className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleDelete(c.id)}
-                              className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl border border-rose-200/40 shadow-pastel transition-all"
+                              className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl border border-rose-200/40 shadow-inner transition-all"
                               title="Hapus"
                             >
                               <Trash2 className="w-4 h-4" />
