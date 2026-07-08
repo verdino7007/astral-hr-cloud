@@ -129,7 +129,7 @@ function NewAnalysis() {
       <AnimatePresence mode="wait">
         
         {/* ════ STAGE 1: WELCOME/LANDING PAGE ════ */}
-        {step === 'welcome' && (
+        {step === 'welcome' ? (
           <motion.div
             key="welcome"
             initial={{ opacity: 0, y: 30 }}
@@ -168,10 +168,9 @@ function NewAnalysis() {
               Ilmu pembacaan karakter ini didasarkan pada perhitungan probabilitas siklus kosmik, membantu menyusun keputusan strategis penempatan kerja secara objektif.
             </div>
           </motion.div>
-        )}
-
-        {/* ════ STAGE 2: INPUT SELECTION (MANUAL OR CSV) ════ */}
-        {step === 'input' && (
+        ) : step === 'input' ? (
+          
+          /* ════ STAGE 2: INPUT SELECTION (MANUAL OR CSV) ════ */
           <motion.div
             key="input-form"
             initial={{ opacity: 0, y: 30 }}
@@ -296,10 +295,9 @@ function NewAnalysis() {
               )}
             </div>
           </motion.div>
-        )}
-
-        {/* ════ STAGE 3: RUNNING OR RESULTS DASHBOARD ════ */}
-        {step === 'results' && (
+        ) : (
+          
+          /* ════ STAGE 3: RUNNING OR RESULTS DASHBOARD ════ */
           <motion.div
             key="results-dashboard"
             initial={{ opacity: 0 }}
@@ -346,15 +344,9 @@ function NewAnalysis() {
                 </div>
 
                 {/* Report Section */}
-                <motion.div
-                  id="report-content"
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="show"
-                  className="flex flex-col gap-10"
-                >
+                <div id="report-content" className="flex flex-col gap-10">
                   {/* ── Result Header (Layered Overlapping Layout) ── */}
-                  <motion.div variants={itemVariants} className="relative z-20 flex flex-col md:flex-row gap-6 items-stretch">
+                  <div className="relative z-20 flex flex-col md:flex-row gap-6 items-stretch">
                     {/* Score Card - Overlapping on top */}
                     <div className="card p-8 rounded-3xl flex items-center gap-6 group shrink-0 md:w-64 bg-gradient-to-br from-white to-clay-peach/20 border-white shadow-clay-card slant-left md:-rotate-2 hover:rotate-0 transition-transform">
                       <div className="w-16 h-16 rounded-[20px] bg-gradient-to-br from-white to-clay-peach flex items-center justify-center shrink-0 shadow-clay-card border-2 border-white">
@@ -390,11 +382,11 @@ function NewAnalysis() {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
 
                   {/* ── Holistic Synthesis ── */}
                   {!analysisResult.error && analysisResult.results?.synthesis && (
-                    <motion.div variants={itemVariants} className="card p-10 lg:p-12 bg-gradient-to-br from-white via-clay-peach/20 to-white border-white md:-mt-4 relative z-10 shadow-clay-card slant-right slant-hover">
+                    <div className="card p-10 lg:p-12 bg-gradient-to-br from-white via-clay-peach/20 to-white border-white md:-mt-4 relative z-10 shadow-clay-card slant-right slant-hover">
                       <div className="absolute -top-3.5 left-8 px-4 py-1.5 bg-gradient-to-r from-clay-orange to-clay-orange-dark text-white text-[10px] font-black rounded-full shadow-clay-btn tracking-widest uppercase">
                         🎯 Synthesis
                       </div>
@@ -407,18 +399,18 @@ function NewAnalysis() {
                           return <p key={idx} dangerouslySetInnerHTML={{ __html: formattedHtml }} />;
                         })}
                       </div>
-                    </motion.div>
+                    </div>
                   )}
 
                   {/* ── Tab Content ── */}
                   {analysisResult.error ? (
-                    <motion.div variants={itemVariants} className="card p-12 flex flex-col items-center justify-center border-red-200 bg-red-50/50 shadow-clay-card">
+                    <div className="card p-12 flex flex-col items-center justify-center border-red-200 bg-red-50/50 shadow-clay-card">
                       <Compass className="w-14 h-14 text-red-500/70 mb-5 animate-bounce" />
                       <h3 className="text-lg font-black text-red-600">Analysis Error</h3>
                       <p className="text-clay-dark mt-3 text-center max-w-md text-sm leading-relaxed font-semibold">{analysisResult.error}</p>
-                    </motion.div>
+                    </div>
                   ) : (
-                    <motion.div variants={itemVariants} className="card p-8 lg:p-10 shadow-clay-card md:-mt-2 relative z-0">
+                    <div className="card p-8 lg:p-10 shadow-clay-card md:-mt-2 relative z-0">
                       <AnimatePresence mode="wait">
 
                         {/* BaZi Tab */}
@@ -567,9 +559,9 @@ function NewAnalysis() {
                           </motion.div>
                         )}
                       </AnimatePresence>
-                    </motion.div>
+                    </div>
                   )}
-                </motion.div>
+                </div>
               </div>
             )}
           </motion.div>
